@@ -1,9 +1,15 @@
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 
+#define I2CDEV_DEFAULT_READ_TIMEOUT 1000
+
+#define SDA_PIN p28
+#define SCL_PIN p27
+
 #include "mbed.h"
 
 class I2Cdev {
+    I2C i2c(SDA_PIN, SCL_PIN);
     public:
         I2Cdev();
 
