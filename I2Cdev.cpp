@@ -59,7 +59,16 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint16_t timeout=I2Cdev::readTimeout) {
     if(i2c.write(devAddr, regAddr, 1))
         return -1;
-
+    for(uint8_t i = 0; i < length * 2; i++) {
+        uint8_t b;
+        if(readByte(devAddr, regAddr, &b))
+            return -1;
+        if((i % 2) == 0)
+            data[i / 2] = b << 8;
+        else
+            data[i / 2] |= b;
+    }
+    return 0;
 }
 
 bool I2Cdev::writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
