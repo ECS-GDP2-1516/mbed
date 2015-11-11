@@ -1,5 +1,8 @@
 #include "I2Cdev.h"
 
+I2Cdev::I2Cdev() {
+}
+
 I2Cdev::I2Cdev(PinName sda, PinName scl) {
 }
 
@@ -44,7 +47,8 @@ int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uin
 }
 
 int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data) {
-    return readByte(devAddr, regAddr, 1, data);
+    return readBytes(devAddr, regAddr, 1, data);
+}
 
 int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data) {
     return readWords(devAddr, regAddr, 1, data);
@@ -101,7 +105,7 @@ bool I2Cdev::writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8
         return true;
     uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
     data <<= (bitStart - length + 1);
-    data &= mas;
+    data &= mask;
     b &= ~(mask);
     b |= data;
     return writeByte(devAddr, regAddr, b);

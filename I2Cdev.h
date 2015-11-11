@@ -9,6 +9,7 @@ class I2Cdev {
     I2C i2c = I2C(p28, p27);
     public:
         I2Cdev();
+        I2Cdev(PinName sda, PinName scl);
 
         static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
         static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
