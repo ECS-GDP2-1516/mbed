@@ -10,7 +10,7 @@ int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t
     return ret;
 }
 
-int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum) {
+int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data) {
     uint16_t b;
     uint8_t ret = readWord(devAddr, regAddr, &b);
     *data = b & (1 << bitNum);
