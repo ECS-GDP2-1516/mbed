@@ -6,10 +6,10 @@
 #define I2CDEV_DEFAULT_READ_TIMEOUT 1000
 
 class I2Cdev {
-    I2C i2c = I2C(p28, p27);
     public:
         I2Cdev();
-        I2Cdev(PinName sda, PinName scl);
+
+        static void init();
 
         static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
         static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
@@ -20,6 +20,7 @@ class I2Cdev {
         static int8_t readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
         static int8_t readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
 
+        static bool writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
         static bool writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
         static bool writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
         static bool writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data);
@@ -27,6 +28,8 @@ class I2Cdev {
         static bool writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data);
         static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
         static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
+    private:
+        static I2C i2c;
 };
 
 #endif // _I2CDEV_H_

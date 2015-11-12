@@ -41,6 +41,7 @@ THE SOFTWARE.
  */
 MPU6050::MPU6050() {
     devAddr = MPU6050_DEFAULT_ADDRESS;
+    I2Cdev::init();
 }
 
 /** Specific address constructor.

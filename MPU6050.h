@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include "I2Cdev.h"
 //#include <avr/pgmspace.h>
 
-
+#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 
 #define MPU6050_ADDRESS_AD0_LOW     210 // address pin low (GND), default for InvenSense evaluation board
 #define MPU6050_ADDRESS_AD0_HIGH    211 // address pin high (VCC)
