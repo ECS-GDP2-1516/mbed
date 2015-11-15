@@ -1,4 +1,3 @@
-// I2Cdev library collection - MPU6050 I2C device class
 // Based on InvenSense MPU-6050 register map document rev. 2.0, 5/19/2011 (RM-MPU-6000A-00)
 // 8/24/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
@@ -41,7 +40,6 @@ THE SOFTWARE.
  */
 MPU6050::MPU6050() {
     devAddr = MPU6050_DEFAULT_ADDRESS;
-    I2Cdev::init();
 }
 
 /** Specific address constructor.

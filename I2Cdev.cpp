@@ -54,34 +54,24 @@ int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data) {
 }
 
 int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data) {
-    i2c.start();
-    if(i2c.write(devAddr,(const char *)&regAddr, 1)) {
-        i2c.stop();
+    if(i2c.write(devAddr,(const char *)&regAddr, 1))
         return -1;
-    }
     int ret = i2c.read(devAddr, (char *)data, length);
-    i2c.stop();
     return ret;
 }
 
 int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data) {
-    i2c.start();
-    if(i2c.write(devAddr, (const char *)&regAddr, 1)) {
-        i2c.stop();
+    if(i2c.write(devAddr, (const char *)&regAddr, 1))
         return -1;
-    }
     for(uint8_t i = 0; i < length * 2; i++) {
         uint8_t b;
-        if(readByte(devAddr, regAddr, &b)) {
-            i2c.stop();
+        if(readByte(devAddr, regAddr, &b))
             return -1;
-        }
         if((i % 2) == 0)
             data[i / 2] = b << 8;
         else
             data[i / 2] |= b;
     }
-    i2c.stop();
     return 0;
 }
 
@@ -136,12 +126,8 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     send[0] = regAddr;
     for(int i = 0; i < length; i++)
         send[i + 1] = data[i];
-    i2c.start();
-    if(i2c.write(devAddr, (const char *)send, length + 1)) {
-        i2c.stop();
+    if(i2c.write(devAddr, (const char *)send, length + 1))
         return true;
-    }
-    i2c.stop();
     return false;
 }
 
@@ -153,11 +139,7 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         words[length * 2 + 1] = (char)(data[length] >> 8);
         words[length * 2 + 2] = (char)(data[length] & 0xff);
     }
-    i2c.start();
-    if(i2c.write(devAddr, words, length * 2 + 1)) {
-        i2c.stop();
+    if(i2c.write(devAddr, words, length * 2 + 1))
         return true;
-    }
-    i2c.stop();
     return false;
 }
