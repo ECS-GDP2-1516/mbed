@@ -16,6 +16,12 @@ MPU6050 accelgyro;
 DigitalOut myled(LED1);
 Serial serial(p9, p10);
 
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+
+float Ax, Ay, Az;
+float Gx, Gy, Gz;
+
 /*int main() {
     while(1) {
         char data[1];
@@ -32,7 +38,20 @@ int main() {
     printf("Initializing I2C device.....\n");
     accelgyro.initialize();
     printf("Testing device connections....\n");
-    printf(accelgyro.testConnection() ? "MPU6050 connection successfule\n" : "MPU6050 connection failure\n");
+    printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
     while(1) {
+        accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+        Ax = ax / 16384.00;
+        Ay = ay / 16384.00;
+        Az = az / 16384.00;
+        Gx = gx / 131.00;
+        Gy = gy / 131.00;
+        Gz = gz / 131.00;
+        printf("%d, %d, %d\n", Ax, Ay, Az);
+        printf("%d, %d, %d\n", Gx, Gy, Gz);
+        myled = 1;
+        wait(0.2);
+        myled = 0;
+        wait(0.2);
     }
 }
