@@ -13,7 +13,6 @@
 
 MPU6050 accelgyro;
 
-DigitalOut myled(LED1);
 Serial serial(p9, p10);
 
 int16_t ax, ay, az;
@@ -21,18 +20,6 @@ int16_t gx, gy, gz;
 
 float Ax, Ay, Az;
 float Gx, Gy, Gz;
-
-/*int main() {
-    while(1) {
-        char data[1];
-        int ret;
-        for(address = 0; address < 256; address++) {
-            ret = sensor.read(address, data, 1);
-            if(ret == 0) 
-                printf("%d, %d\n", address, ret);
-        }
-    }
-}*/
 
 int main() {
     printf("Initializing I2C device.....\n");
@@ -44,14 +31,12 @@ int main() {
         Ax = ax / 16384.00;
         Ay = ay / 16384.00;
         Az = az / 16384.00;
-        Gx = gx / 131.00;
-        Gy = gy / 131.00;
-        Gz = gz / 131.00;
-        printf("%d, %d, %d\n", Ax, Ay, Az);
-        printf("%d, %d, %d\n", Gx, Gy, Gz);
-        myled = 1;
-        wait(0.2);
-        myled = 0;
-        wait(0.2);
+        Gx = gx / 131.0;
+        Gy = gy / 131.0;
+        Gz = gz / 131.0;
+        printf("Accel: %d, %d, %d\n", ax, ay, az);
+        printf("Gyro:  %d, %d, %d\n", gx, gy, gz);
+        //printf("Accel2:%d, %d, %d\n", Ax, Ay, Az);
+        //printf("Gyro2: %d, %d, %d\n", Gx, Gy, Gz);
     }
 }
