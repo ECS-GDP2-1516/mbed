@@ -21,7 +21,38 @@ int16_t gx, gy, gz;
 float Ax, Ay, Az;
 float Gx, Gy, Gz;
 
+/*
+ * Watchdog control WDTOSCCTRL options
+ * Divisor:
+ * 2 x (1 + VAL) ie VAL = 0x0 -> Divisor = 2
+ * Frequency:
+ * 0x1 0.6    MHz
+ * 0x2 1.05   MHz
+ * 0x3 1.4    MHz
+ * 0x4 1.75   MHz
+ * 0x5 2.1    MHz
+ * 0x6 2.4    MHz
+ * 0x7 2.7    MHz
+ * 0x8 3.0    MHz
+ * 0x9 3.25   MHz
+ * 0xA 3.5    MHz
+ * 0xB 3.75   MHz
+ * 0xC 4.0    MHz
+ * 0xD 4.2    MHz
+ * 0xE 4.4    MHz
+ * 0xF 4.6    MHz
+ */
+
+
 int main() {
+    LPC_SYSCON->WDTOSCCTRL = (0x2 << 5) | 0x0;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
+    LPC_SYSCON->PDRUNCFG   &= ~(1 << 6);         // Powers on the watchdog oscillator
+    LPC_SYSCON->MAINCLKSEL = 0x2;                // Sets watchdog oscillator as main clk
+    LPC_SYSCON->MAINCLKUEN = 0x1;                //
+    LPC_SYSCON->MAINCLKUEN = 0x0;                // Applies these changes
+    LPC_SYSCON->MAINCLKUEN = 0x1;                //
+    while (!(LPC_SYSCON->MAINCLKUEN & 0x01));    // Waits for changes to complete
+
     printf("Initializing I2C device.....\n");
     accelgyro.initialize();
     printf("Testing device connections....\n");
