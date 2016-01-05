@@ -48,6 +48,8 @@ int* data;
  * 0xF 4.6    MHz
  */
 
+int classify(int* v);
+void sigmoid(int* var);
 
 int main() {
     LPC_SYSCON->WDTOSCCTRL = (0x2 << 5) | 0x0;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
