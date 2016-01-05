@@ -65,7 +65,7 @@ int main() {
     printf("Testing device connections....\n");
     printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
 
-    data   = malloc(sizeof(int) * 32);
+    data   = (int *)malloc(sizeof(int) * 32);
     int* i = data;
 
     while(1) {
@@ -81,7 +81,7 @@ int main() {
         {
             classify(data);
             free(data);
-            data = malloc(sizeof(int) * 32);
+            data = (int *)malloc(sizeof(int) * 32);
             i    = data;
         }
     }
