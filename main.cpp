@@ -1,6 +1,7 @@
 #include "mbed.h"
 #include "I2Cdev.h"
 #include "MPU6050.h"
+#include <math.h>
 
 // The offsets of the gyro
 #define Gx_offset -1.50
@@ -21,7 +22,8 @@ const int* W=new int[71]{19112,-2698,89208,-7642,-7701,21354,-12261,6248,-11737,
 MPU6050 accelgyro;
 
 Serial serial(p9, p10);
-DigitalOut myled(LED1);
+DigitalOut myled(LED2);
+DigitalOut myled2(LED3);
 int16_t ax, ay, az;
 
 int* data;
@@ -67,22 +69,27 @@ int main() {
     serial.printf("Testing device connections....\n");
     serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
 
-    data   = (int *)malloc(sizeof(int) * 32);
+    data   = (int *)malloc(sizeof(int) * 30);
     int* i = data;
+    myled2 = 0;
 
     while(1) {
         accelgyro.getAcceleration(&ax, &ay, &az);
         *i = ax >> 2;
+        *i = 1433;
         i++;
         *i = ay >> 2;
+        *i = -1638;
         i++;
         *i = az >> 2;
+        *i = 3276;
         i++;
-        serial.printf("%d, %d, %d\n", ax, ay, az);
+        //serial.printf("%d, %d, %d\n", ax, ay, az);
 
         if (i == data + 30)
         {
             myled = classify(data);
+            myled2 = 1;
             free(data);
             data = (int *)malloc(sizeof(int) * 32);
             i    = data;
