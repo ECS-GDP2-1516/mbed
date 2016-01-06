@@ -67,13 +67,10 @@ int main() {
     while(1) {
         accelgyro.getAcceleration(&ax, &ay, &az);
         *i = ax >> 2;
-        *i = 1433;
         i++;
         *i = ay >> 2;
-        *i = -1638;
         i++;
         *i = az >> 2;
-        *i = 3276;
         i++;
         //serial.printf("%d, %d, %d\n", ax, ay, az);
 
