@@ -21,7 +21,7 @@ const int* W=new int[71]{19112,-2698,89208,-7642,-7701,21354,-12261,6248,-11737,
 MPU6050 accelgyro;
 
 Serial serial(p9, p10);
-
+DigitalOut myled(LED1);
 int16_t ax, ay, az;
 
 int* data;
@@ -60,10 +60,12 @@ int main() {
     LPC_SYSCON->MAINCLKUEN = 0x1;                //
     while (!(LPC_SYSCON->MAINCLKUEN & 0x01));    // Waits for changes to complete
 
-    printf("Initializing I2C device.....\n");
+    LPC_USART->ACR = 0x7;
+
+    serial.printf("Initializing I2C device.....\n");
     accelgyro.initialize();
-    printf("Testing device connections....\n");
-    printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
+    serial.printf("Testing device connections....\n");
+    serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
 
     data   = (int *)malloc(sizeof(int) * 32);
     int* i = data;
@@ -76,10 +78,11 @@ int main() {
         i++;
         *i = az >> 2;
         i++;
+        serial.printf("%d, %d, %d\n", ax, ay, az);
 
         if (i == data + 30)
         {
-            classify(data);
+            myled = classify(data);
             free(data);
             data = (int *)malloc(sizeof(int) * 32);
             i    = data;
@@ -117,17 +120,14 @@ int classify(int* v)
         sigmoid(i);
     }
 
-    if (v[0] > v[1] && v[0] > v[2])
+    // Detects peak or trough
+    if ((v[0] > v[1] && v[0] > v[2]) || (v[1] > v[0] && v[1] > v[2]))
+    {
+        return 1;
+    }
+    else //Not exercise
     {
         return 0;
-    }
-    else if (v[1] > v[0] && v[1] > v[2])
-    {
-        return 1 << 12;
-    }
-    else
-    {
-        return 2 << 12;
     }
 }
 
