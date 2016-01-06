@@ -62,7 +62,7 @@ int main() {
     serial.printf("Testing device connections....\n");
     serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
 
-    data   = (int *)malloc(sizeof(int) * 30);
+    data   = (int *)malloc(sizeof(int) * 32);
     int* i = data;
     myled2 = 0;
 
