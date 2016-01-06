@@ -2,7 +2,7 @@
 
 cd libraries/mbed
 
-arm-none-eabi-gcc \
+arm-none-eabi-g++ \
 -I ../.. \
 -I ../../mbed \
 -I ./api \
@@ -17,6 +17,8 @@ arm-none-eabi-gcc \
 -Os -s -fno-common  \
 -lc_nano -lrdimon --specs=nosys.specs -mthumb -mcpu=cortex-m0 \
 -D NDEBUG \
+../fs/fat/FATFileSystem.cpp \
+../fs/fat/FATFileHandle.cpp \
 common/I2C.cpp \
 common/SerialBase.cpp \
 common/Serial.cpp \
@@ -24,11 +26,12 @@ common/Stream.cpp \
 common/FileBase.cpp \
 common/FileLike.cpp \
 common/gpio.c \
-../fs/fat/FATFileSystem.cpp \
 ../../main.cpp \
 ../../classify.cpp \
 ../../I2Cdev.cpp \
 ../../MPU6050.cpp \
+targets/hal/TARGET_NXP/TARGET_LPC11UXX/serial_api.c \
+targets/hal/TARGET_NXP/TARGET_LPC11UXX/gpio_api.c \
 targets/hal/TARGET_NXP/TARGET_LPC11UXX/i2c_api.c \
 targets/hal/TARGET_NXP/TARGET_LPC11UXX/pinmap.c \
 common/pinmap_common.c \
