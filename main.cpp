@@ -1,6 +1,7 @@
 #include "mbed.h"
 #include "I2Cdev.h"
 #include "MPU6050.h"
+#include "classify.h"
 #include <math.h>
 
 // The offsets of the gyro
@@ -43,9 +44,6 @@ int* data;
  * 0xF 4.6    MHz
  */
 
-int classify(int* v);
-void sigmoid(int* var);
-
 int main() {
     LPC_SYSCON->WDTOSCCTRL = (0x2 << 5) | 0x0;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
     LPC_SYSCON->PDRUNCFG   &= ~(1 << 6);         // Powers on the watchdog oscillator
@@ -62,7 +60,7 @@ int main() {
     serial.printf("Testing device connections....\n");
     serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
 
-    data   = (int *)malloc(sizeof(int) * 32);
+    data   = (int *)malloc(sizeof(int) * CLASSIFY_MEMORY_ALLOCATION);
     int* i = data;
     myled2 = 0;
 
