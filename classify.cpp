@@ -50,7 +50,7 @@ int classify(int rear, int buffer[])
     }
 
     // Detects peak or trough
-    if ((v[0] > v[1] && v[0] > v[2]) || (v[1] > v[0] && v[1] > v[2]))
+    if (v[0] > v[2] || v[1] > v[2])
     {
         return 1;
     }
