@@ -50,7 +50,7 @@ targets/cmsis/TARGET_NXP/TARGET_LPC11UXX/TOOLCHAIN_GCC_CS/sys.cpp \
 targets/hal/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401/PeripheralPins.c \
 -fdata-sections -ffunction-sections \
 -Wl,--gc-sections \
--o ../../i2c.out
+-o ../../i2c.elf
 
 cd ../..
 
