@@ -20,7 +20,10 @@ DigitalOut myled2(LED3);
 DigitalOut myled3(LED4);
 int16_t ax, ay, az;
 
-int* data;
+//int* data;
+int data[CLASSIFY_MEMORY_ALLOCATION]; //data is given to the classifer
+int rear = -1;
+int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
 
 /*
  * Watchdog control WDTOSCCTRL options
@@ -43,6 +46,14 @@ int* data;
  * 0xE 4.4    MHz
  * 0xF 4.6    MHz
  */
+ 
+// inserts the next set of values read from the sensor into the buffer
+void insert_reading(int b[], int x, int y, int z) {
+    rear=(rear+3)%BUFFER_SIZE;
+    b[rear-2]=x;
+    b[rear-1]=y;
+    b[rear]=z;
+}
 
 int main() {
     LPC_SYSCON->WDTOSCCTRL = (0x1 << 5) | 0x5;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
@@ -61,27 +72,45 @@ int main() {
     //serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
     myled3 = 1;
 
-    data   = (int *)malloc(sizeof(int) * CLASSIFY_MEMORY_ALLOCATION);
-    int* i = data;
+    //data   = (int *)malloc(sizeof(int) * CLASSIFY_MEMORY_ALLOCATION);
+    //int* i = data;
     myled2 = 0;
+    
+    int count;
+    
+    //first, fill up the buffer with values
+    for(count=0; count<BUFFER_SIZE/3; count++) {
+        accelgyro.getAcceleration(&ax, &ay, &az);
+        insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
+    }
 
+    //now we continue to read values and classify them
+    int start;
     while(1) {
         accelgyro.getAcceleration(&ax, &ay, &az);
-        *i = ax >> 2;
+        /**i = ax >> 2;
         i++;
         *i = ay >> 2;
         i++;
         *i = az >> 2;
-        i++;
+        i++;*/
         //serial.printf("%d, %d, %d\n", ax, ay, az);
+        insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
 
-        if (i == data + 30)
+        /*if (i == data + 30)
         {
             myled = classify(data);
             myled2 = 1;
             free(data);
             data = (int *)malloc(sizeof(int) * 32);
             i    = data;
+        }*/
+        //now we copy the values from the buffer into the data array so that they are in the correct order
+        start = (rear+1)%BUFFER_SIZE;
+        memcpy(&data[0], &buffer[start], (BUFFER_SIZE-start) * sizeof(int));
+        if (start != 0) {
+            memcpy(&data[BUFFER_SIZE-start], &buffer[0], start * sizeof(int));
         }
+        myled = classify(data);
     }
 }
