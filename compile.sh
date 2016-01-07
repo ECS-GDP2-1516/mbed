@@ -54,4 +54,4 @@ targets/hal/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401/PeripheralPins.c \
 
 cd ../..
 
-arm-none-eabi-objcopy -O binary i2c.out i2c.bin
+arm-none-eabi-objcopy -O binary i2c.elf i2c.bin
