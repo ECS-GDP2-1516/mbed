@@ -20,7 +20,7 @@ DigitalOut myled2(LED3);
 DigitalOut myled3(LED4);
 int16_t ax, ay, az;
 
-int rear = -1;
+int8_t rear = -1;
 int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
 
 /*
@@ -83,7 +83,6 @@ int main() {
     }
 
     //now we continue to read values and classify them
-    int start;
     while(1) {
         accelgyro.getAcceleration(&ax, &ay, &az);
 
