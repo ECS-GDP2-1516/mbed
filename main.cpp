@@ -20,8 +20,6 @@ DigitalOut myled2(LED3);
 DigitalOut myled3(LED4);
 int16_t ax, ay, az;
 
-//int* data;
-int data[CLASSIFY_MEMORY_ALLOCATION]; //data is given to the classifer
 int rear = -1;
 int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
 
@@ -88,29 +86,9 @@ int main() {
     int start;
     while(1) {
         accelgyro.getAcceleration(&ax, &ay, &az);
-        /**i = ax >> 2;
-        i++;
-        *i = ay >> 2;
-        i++;
-        *i = az >> 2;
-        i++;*/
-        //serial.printf("%d, %d, %d\n", ax, ay, az);
+
         insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
 
-        /*if (i == data + 30)
-        {
-            myled = classify(data);
-            myled2 = 1;
-            free(data);
-            data = (int *)malloc(sizeof(int) * 32);
-            i    = data;
-        }*/
-        //now we copy the values from the buffer into the data array so that they are in the correct order
-        start = (rear+1)%BUFFER_SIZE;
-        memcpy(&data[0], &buffer[start], (BUFFER_SIZE-start) * sizeof(int));
-        if (start != 0) {
-            memcpy(&data[BUFFER_SIZE-start], &buffer[0], start * sizeof(int));
-        }
-        myled = classify(data);
+        myled = classify(rear, buffer);
     }
 }

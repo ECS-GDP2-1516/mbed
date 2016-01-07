@@ -7,33 +7,45 @@ const int* W=new int[71]{779,-302,-5398,-994,-3456,-7674,-3501,8029,7970,9422,-8
 -1993,36688,-45645,
 };
 
-int classify(int* v)
+int classify(int rear, int buffer[])
 {
     int* offset=(int*)W;
-    int* s1;
-    int* e1;
-    int* s2=v;
-    int* e2=s2 + 30;
+    
+    int nodeA = *offset++;
+    int j     = rear;
+    while (1)
+    {
+        j      = (j + 1) % BUFFER_SIZE;
+        nodeA += (*offset++ * buffer[j]) >> 12;
 
-    // Layer 2
-    s1=v + 30;
-    e1=s1 + 2;
-    for (int* i = s1; i < e1; i++){
-        *i=*offset++;
-        for (int* j=s2; j < e2; j++) {
-            *i+=(*offset++**j) >> 12;
+        if (j == rear)
+        {
+            break;
         }
-        sigmoid(i);
     }
+    sigmoid(&nodeA);
 
-    // Layer 1
-    s2=v + 0;
-    e2=s2 + 3;
-    for (int* i = s2; i < e2; i++){
-        *i=*offset++;
-        for (int* j=s1; j < e1; j++) {
-            *i+=(*offset++**j) >> 12;
+    int nodeB = *offset++;
+    j         = rear;
+    while (1)
+    {
+        j      = (j + 1) % BUFFER_SIZE;
+        nodeB += (*offset++ * buffer[j]) >> 12;
+
+        if (j == rear)
+        {
+            break;
         }
+    }
+    sigmoid(&nodeB);
+
+    int v[3];
+
+    for (int* i = v; i < v + 3; i++)
+    {
+        *i  = *offset++;
+        *i += (*offset++ * nodeA) >> 12;
+        *i += (*offset++ * nodeB) >> 12;
         sigmoid(i);
     }
 
