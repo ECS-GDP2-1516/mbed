@@ -3,12 +3,9 @@
 
 GCC_BIN = 
 PROJECT = mbed_blinky
-OBJECTS = ./main.o ./I2Cdev.o ./MPU6050.o ./classify.o
-SYS_OBJECTS = ./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/retarget.o ./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/startup_LPC11xx.o ./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/system_LPC11Uxx.o 
-INCLUDE_PATHS = -I. -I./mbed -I./mbed/TARGET_LPC11U24 -I./mbed/TARGET_LPC11U24/TARGET_NXP -I./mbed/TARGET_LPC11U24/TARGET_NXP/TARGET_LPC11UXX -I./mbed/TARGET_LPC11U24/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401 -I./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM 
-LIBRARY_PATHS = -L./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM 
-LIBRARIES = -lmbed 
-LINKER_SCRIPT = ./mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/LPC11U24.ld
+OBJECTS = ./lib/gpio.o ./lib/board.o ./lib/i2c_api.o ./lib/pinmap.o ./lib/serial_api.o ./lib/ticker_api.o ./lib/gpio_api.o ./lib/us_ticker.o ./lib/pinmap_common.o ./lib/us_ticker_api.o ./lib/mbed_interface.o ./lib/wait_api.o ./lib/semihost_api.o ./lib/system_LPC11Uxx.o ./lib/cmsis_nvic.o ./lib/PeripheralPins.o ./lib/I2C.o ./main.o ./classify.o ./lib/I2Cdev.o ./lib/MPU6050.o ./lib/retarget.o ./lib/startup_LPC11xx.o
+INCLUDE_PATHS = -I. -I./lib/api
+LINKER_SCRIPT = ./LPC11U24.ld
 
 ############################################################################### 
 AS      = $(GCC_BIN)arm-none-eabi-as
@@ -21,7 +18,7 @@ SIZE    = $(GCC_BIN)arm-none-eabi-size
 
 
 CPU = -mcpu=cortex-m0 -mthumb 
-CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -Wall -Wextra -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
+CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
 CC_SYMBOLS = -D__CORTEX_M0 -DTARGET_LPC11UXX -DTOOLCHAIN_GCC -DTARGET_LPC11U24_401 -DTARGET_CORTEX_M -DTARGET_NXP -DTOOLCHAIN_GCC_ARM -DTARGET_M0 -DARM_MATH_CM0 -DMBED_BUILD_TIMESTAMP=1447257386.83 -DTARGET_LPC11U24 -D__MBED__=1 
 
 LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=$(PROJECT).map,--cref
@@ -44,10 +41,6 @@ clean:
 	rm -f $(PROJECT).bin $(PROJECT).elf $(PROJECT).hex $(PROJECT).map $(PROJECT).lst $(OBJECTS) $(DEPS)
 
 
-.asm.o:
-	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
-.s.o:
-	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
 .S.o:
 	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
 
@@ -61,7 +54,7 @@ clean:
 
 
 $(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS)
-	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) $(LIBRARY_PATHS) -o $@ $^ $(LIBRARIES) $(LD_SYS_LIBS) $(LIBRARIES) $(LD_SYS_LIBS)
+	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) -o $@ $^ $(LD_SYS_LIBS)
 
 	@echo ""
 	@echo "*****"
