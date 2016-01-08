@@ -35,13 +35,14 @@ CPP="arm-none-eabi-g++ $CC_FLAGS $CC_SYMBOLS -std=gnu++98 -fno-rtti $INCLUDE -o"
 $CPP I2C.o common/I2C.cpp
 $CPP main.o ../../main.cpp
 $CPP classify.o ../../classify.cpp
+$CPP heuristic.o ../../heuristic.cpp
 $CPP I2Cdev.o ../../I2Cdev.cpp
 $CPP MPU6050.o ../../MPU6050.cpp
 $CPP retarget.o common/retarget.cpp
 
 arm-none-eabi-gcc $CPU -c -x assembler-with-cpp -o startup.o targets/cmsis/TARGET_NXP/TARGET_LPC11UXX/TOOLCHAIN_GCC_ARM/startup_LPC11xx.S
 
-OBJECTS="gpio.o board.o i2c_api.o pinmap.o serial_api.o ticker_api.o gpio_api.o us_ticker.o pinmap_common.o us_ticker_api.o mbed_interface.o wait_api.o semihost_api.o system_LPC11Uxx.o cmsis_nvic.o PeripheralPins.o I2C.o main.o classify.o I2Cdev.o MPU6050.o retarget.o startup.o"
+OBJECTS="gpio.o board.o i2c_api.o pinmap.o serial_api.o ticker_api.o gpio_api.o us_ticker.o pinmap_common.o us_ticker_api.o mbed_interface.o wait_api.o semihost_api.o system_LPC11Uxx.o cmsis_nvic.o PeripheralPins.o I2C.o main.o classify.o heuristic.o I2Cdev.o MPU6050.o retarget.o startup.o"
 
 arm-none-eabi-gcc $LD_FLAGS -T$LINKER_SCRIPT -o out.elf $OBJECTS $LD_SYS_LIBS
 

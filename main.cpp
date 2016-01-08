@@ -2,6 +2,7 @@
 #include "I2Cdev.h"
 #include "MPU6050.h"
 #include "classify.h"
+#include "heuristic.h"
 
 // The offsets of the gyro
 #define Gx_offset -1.50
@@ -81,6 +82,9 @@ int main() {
         accelgyro.getAcceleration(&ax, &ay, &az);
         insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
     }
+    
+    //initiate the heuristic before classifying
+    init_heur();
 
     //now we continue to read values and classify them
     while(1) {
@@ -88,6 +92,6 @@ int main() {
 
         insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
 
-        myled = classify(rear, buffer);
+        myled = heur_classify(classify(rear, buffer));
     }
 }
