@@ -2,15 +2,14 @@
 
 cd libraries/mbed
 
-INCLUDE="-I ../.. -I ../../mbed -I ./api -I ./hal -I ./hal/TARGET_NXP/TARGET_LPC11UXX -I ./hal/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401 -I ./targets/hal/TARGET_NXP/TARGET_LPC11UXX -I ./targets/hal/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401 -I ./targets/cmsis/TARGET_NXP/TARGET_LPC11UXX -I ./targets/cmsis"
+INCLUDE="-I ../.. -I ./api -I ./hal -I ./hal/TARGET_NXP/TARGET_LPC11UXX -I ./hal/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401 -I ./targets/hal/TARGET_NXP/TARGET_LPC11UXX -I ./targets/hal/TARGET_NXP/TARGET_LPC11UXX/TARGET_LPC11U24_401 -I ./targets/cmsis/TARGET_NXP/TARGET_LPC11UXX -I ./targets/cmsis"
 
 CPU="-mcpu=cortex-m0 -mthumb"
 CC_FLAGS="$CPU -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP"
 CC_SYMBOLS="-D__CORTEX_M0 -DTARGET_LPC11UXX -DTOOLCHAIN_GCC -DTARGET_LPC11U24_401 -DTARGET_CORTEX_M -DTARGET_NXP -DTOOLCHAIN_GCC_ARM -DTARGET_M0 -DARM_MATH_CM0 -DMBED_BUILD_TIMESTAMP=1447257386.83 -DTARGET_LPC11U24 -D__MBED__=1 -DNDEBUG -Os"
 LD_FLAGS="$CPU -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=i2c.map,--cref"
 LD_SYS_LIBS="-lstdc++ -lsupc++ -lm -lc -lgcc -lnosys"
-LINKER_SCRIPT="../../mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM/LPC11U24.ld"
-LIBRARY_PATHS="-L../../mbed/TARGET_LPC11U24/TOOLCHAIN_GCC_ARM"
+LINKER_SCRIPT="targets/cmsis/TARGET_NXP/TARGET_LPC11UXX/TOOLCHAIN_GCC_ARM/TARGET_LPC11U24_401/LPC11U24.ld"
 
 CC="arm-none-eabi-gcc $CC_FLAGS $CC_SYMBOLS -std=gnu99 $INCLUDE -o"
 
@@ -44,6 +43,6 @@ arm-none-eabi-gcc $CPU -c -x assembler-with-cpp -o startup.o targets/cmsis/TARGE
 
 OBJECTS="gpio.o board.o i2c_api.o pinmap.o serial_api.o ticker_api.o gpio_api.o us_ticker.o pinmap_common.o us_ticker_api.o mbed_interface.o wait_api.o semihost_api.o system_LPC11Uxx.o cmsis_nvic.o PeripheralPins.o I2C.o main.o classify.o I2Cdev.o MPU6050.o retarget.o startup.o"
 
-arm-none-eabi-gcc $LD_FLAGS -T$LINKER_SCRIPT $LIBRARY_PATHS -o out.elf $OBJECTS $LD_SYS_LIBS
+arm-none-eabi-gcc $LD_FLAGS -T$LINKER_SCRIPT -o out.elf $OBJECTS $LD_SYS_LIBS
 
 arm-none-eabi-objcopy -O binary out.elf ../../OUTPUT.bin
