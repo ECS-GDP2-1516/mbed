@@ -18,50 +18,8 @@
 
 #define MBED_LIBRARY_VERSION 109
 
-#include "platform.h"
-
-// Useful C libraries
-#include <math.h>
-#include <time.h>
-
-// mbed Debug libraries
-#include "mbed_error.h"
-#include "mbed_interface.h"
-
-// mbed Peripheral components
-#include "DigitalIn.h"
 #include "DigitalOut.h"
-#include "DigitalInOut.h"
-#include "BusIn.h"
-#include "BusOut.h"
-#include "BusInOut.h"
-#include "PortIn.h"
-#include "PortInOut.h"
-#include "PortOut.h"
-#include "AnalogIn.h"
-#include "AnalogOut.h"
-#include "PwmOut.h"
-#include "Serial.h"
-#include "SPI.h"
-#include "SPISlave.h"
 #include "I2C.h"
-#include "I2CSlave.h"
-#include "Ethernet.h"
-#include "CAN.h"
-#include "RawSerial.h"
-
-// mbed Internal components
-#include "Timer.h"
-#include "Ticker.h"
-#include "Timeout.h"
-#include "LowPowerTimeout.h"
-#include "LowPowerTicker.h"
-#include "LowPowerTimer.h"
-#include "LocalFileSystem.h"
-#include "InterruptIn.h"
-#include "wait_api.h"
-#include "sleep_api.h"
-#include "rtc_time.h"
 
 using namespace mbed;
 using namespace std;
