@@ -3,7 +3,7 @@
 
 GCC_BIN = 
 PROJECT = mbed_blinky
-OBJECTS = ./lib/gpio.o ./lib/board.o ./lib/i2c_api.o ./lib/pinmap.o ./lib/serial_api.o ./lib/ticker_api.o ./lib/gpio_api.o ./lib/us_ticker.o ./lib/pinmap_common.o ./lib/us_ticker_api.o ./lib/mbed_interface.o ./lib/wait_api.o ./lib/semihost_api.o ./lib/system_LPC11Uxx.o ./lib/cmsis_nvic.o ./lib/PeripheralPins.o ./lib/I2C.o ./main.o ./classify.o ./lib/I2Cdev.o ./lib/MPU6050.o ./lib/retarget.o ./lib/startup_LPC11xx.o
+OBJECTS = ./lib/gpio.o ./lib/board.o ./lib/i2c_api.o ./lib/pinmap.o ./lib/serial_api.o ./lib/ticker_api.o ./lib/gpio_api.o ./lib/us_ticker.o ./lib/pinmap_common.o ./lib/us_ticker_api.o ./lib/mbed_interface.o ./lib/wait_api.o  ./lib/system_LPC11Uxx.o ./lib/cmsis_nvic.o ./lib/PeripheralPins.o ./lib/I2C.o ./main.o ./classify.o ./lib/I2Cdev.o ./lib/MPU6050.o ./lib/retarget.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./LPC11U24.ld
 

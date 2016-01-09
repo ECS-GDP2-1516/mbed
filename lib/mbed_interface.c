@@ -13,13 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <stdio.h>
-#include "mbed_interface.h"
 
-#include "gpio_api.h"
-#include "wait_api.h"
-#include "semihost_api.h"
-#include "mbed_error.h"
 #include "toolchain.h"
 
 #if DEVICE_SEMIHOST

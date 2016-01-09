@@ -64,8 +64,6 @@ int main() {
 
     //LPC_USART->ACR = 0x7;
 
-    //serial.printf("Initializing I2C device.....\n");
-    accelgyro.initialize();
     //serial.printf("Testing device connections....\n");
     //serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
     myled3 = 1;
