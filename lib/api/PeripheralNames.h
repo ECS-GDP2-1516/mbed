@@ -16,7 +16,7 @@
 #ifndef MBED_PERIPHERALNAMES_H
 #define MBED_PERIPHERALNAMES_H
 
-#include "cmsis.h"
+#include "LPC11Uxx.h"
 
 #ifdef __cplusplus
 extern "C" {

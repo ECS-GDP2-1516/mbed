@@ -19,7 +19,7 @@
 #include <stdlib.h>
 
 #include "serial_api.h"
-#include "cmsis.h"
+#include "LPC11Uxx.h"
 #include "pinmap.h"
 #include "PeripheralPins.h" // For the Peripheral to Pin Definitions found in the individual Target's Platform
 

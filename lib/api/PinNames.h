@@ -16,7 +16,7 @@
 #ifndef MBED_PINNAMES_H
 #define MBED_PINNAMES_H
 
-#include "cmsis.h"
+#include "LPC11Uxx.h"
 
 #ifdef __cplusplus
 extern "C" {
