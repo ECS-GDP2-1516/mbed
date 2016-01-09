@@ -143,7 +143,7 @@ extern "C" caddr_t _sbrk(int incr) {
 }
 #endif
 
-
+/*
 #ifdef TOOLCHAIN_GCC_CW
 // TODO: Ideally, we would like to define directly "_ExitProcess"
 extern "C" void mbed_exit(int return_code) {
@@ -170,6 +170,7 @@ extern "C" void exit(int return_code) {
 
     while (1);
 }
+*/
 
 #if !defined(TOOLCHAIN_GCC_ARM) && !defined(TOOLCHAIN_GCC_CW)
 } //namespace std
