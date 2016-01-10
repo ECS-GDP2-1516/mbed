@@ -21,16 +21,6 @@
 
 namespace mbed {
 
-static inline void _in_gpio_init_out(gpio_t* gpio, PinName pin, PinMode mode, int value)
-{
-    gpio_init(gpio, pin);
-    if (pin != NC) {
-        gpio_write(gpio, value);
-        gpio_dir(gpio, PIN_OUTPUT);
-        gpio_mode(gpio, mode);
-    }
-}
-
 /** A digital output, used for setting the state of a pin
  *
  * Example:
@@ -56,7 +46,10 @@ public:
      *  @param pin DigitalOut pin to connect to
      */
     DigitalOut(PinName pin) : gpio() {
-        _in_gpio_init_out(&gpio, pin, PullNone, 0);
+        gpio_init(&gpio, pin);
+        gpio_write(&gpio, 0);
+        gpio_dir(&gpio, PIN_OUTPUT);
+        gpio_mode(&gpio, PullNone);
     }
 
     /** Set the output, specified as 0 or 1 (int)
