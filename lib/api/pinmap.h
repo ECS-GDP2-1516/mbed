@@ -17,10 +17,14 @@
 #define MBED_PINMAP_H
 
 #include "PinNames.h"
+#include "mbed_assert.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define LPC_IOCON0_BASE (LPC_IOCON_BASE)
+#define LPC_IOCON1_BASE (LPC_IOCON_BASE + 0x60)
 
 typedef struct {
     PinName pin;
@@ -29,7 +33,27 @@ typedef struct {
 } PinMap;
 
 void pin_function(PinName pin, int function);
-void pin_mode    (PinName pin, PinMode mode);
+
+static inline void pin_mode(PinName pin, PinMode mode) {
+    MBED_ASSERT(pin != (PinName)NC);
+    uint32_t pin_number = (uint32_t)pin;
+    uint32_t drain = ((uint32_t) mode & (uint32_t) OpenDrain) >> 2;
+    
+    __IO uint32_t *reg = (pin_number < 32) ?
+                         (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * pin_number) :
+                         (__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (pin_number - 32));
+    uint32_t tmp = *reg;
+    
+    // pin mode bits: [4:3] -> 11000 = (0x3 << 3)
+    tmp &= ~(0x3 << 3);
+    tmp |= (mode & 0x3) << 3;
+    
+    // drain
+    tmp &= ~(0x1 << 10);
+    tmp |= drain << 10;
+    
+    *reg = tmp;
+}
 
 uint32_t pinmap_peripheral(PinName pin, const PinMap* map);
 uint32_t pinmap_function(PinName pin, const PinMap* map);

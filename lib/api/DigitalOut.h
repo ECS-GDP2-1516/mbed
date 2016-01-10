@@ -18,7 +18,7 @@
 
 #include "platform.h"
 #include "gpio_api.h"
- #include "pinmap.h"
+#include "pinmap.h"
 
 namespace mbed {
 

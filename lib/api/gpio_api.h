@@ -17,38 +17,42 @@
 #define MBED_GPIO_API_H
 
 #include "device.h"
+#include "pinmap.h"
+#include "mbed_assert.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Set the given pin as GPIO
- * @param pin The pin to be set as GPIO
- * @return The GPIO port mask for this pin
- **/
-uint32_t gpio_set(PinName pin);
+static inline uint32_t gpio_set(PinName pin) {
+    MBED_ASSERT(pin != (PinName)NC);
+    int f = ((pin == P0_0)  ||
+             (pin == P0_10) ||
+             (pin == P0_11) ||
+             (pin == P0_12) ||
+             (pin == P0_13) ||
+             (pin == P0_14) ||
+             (pin == P0_15)) ? (1) : (0);
+    
+    pin_function(pin, f);
+    
+    return (1 << ((int)pin & 0x1F));
+}
 
-/* Checks if gpio object is connected (pin was not initialized with NC)
- * @param pin The pin to be set as GPIO
- * @return 0 if port is initialized with NC
- **/
-int gpio_is_connected(const gpio_t *obj);
+static inline void gpio_init(gpio_t *obj, PinName pin) {
+    obj->pin = pin;
+    if (pin == (PinName)NC)
+        return;
 
-/* GPIO object */
-void gpio_init(gpio_t *obj, PinName pin);
-
-void gpio_mode (gpio_t *obj, PinMode mode);
-void gpio_dir  (gpio_t *obj, PinDirection direction);
-
-void gpio_write(gpio_t *obj, int value);
-int  gpio_read (gpio_t *obj);
-
-// the following set of functions are generic and are implemented in the common gpio.c file
-void gpio_init_in(gpio_t* gpio, PinName pin);
-void gpio_init_in_ex(gpio_t* gpio, PinName pin, PinMode mode);
-void gpio_init_out(gpio_t* gpio, PinName pin);
-void gpio_init_out_ex(gpio_t* gpio, PinName pin, int value);
-void gpio_init_inout(gpio_t* gpio, PinName pin, PinDirection direction, PinMode mode, int value);
+    obj->mask = gpio_set(pin);
+    
+    unsigned int port = (unsigned int)pin >> PORT_SHIFT;
+    
+    obj->reg_set = &LPC_GPIO->SET[port];
+    obj->reg_clr = &LPC_GPIO->CLR[port];
+    obj->reg_in  = &LPC_GPIO->PIN[port];
+    obj->reg_dir = &LPC_GPIO->DIR[port];
+}
 
 #ifdef __cplusplus
 }
