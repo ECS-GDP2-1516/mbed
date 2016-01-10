@@ -56,23 +56,3 @@ uint32_t pinmap_peripheral(PinName pin, const PinMap* map) {
     }
     return (uint32_t)NC;
 }
-
-uint32_t pinmap_find_function(PinName pin, const PinMap* map) {
-    while (map->pin != NC) {
-        if (map->pin == pin)
-            return map->function;
-        map++;
-    }
-    return (uint32_t)NC;
-}
-
-uint32_t pinmap_function(PinName pin, const PinMap* map) {
-    uint32_t function = (uint32_t)NC;
-
-    if (pin == (PinName)NC)
-        return (uint32_t)NC;
-    function = pinmap_find_function(pin, map);
-    if ((uint32_t)NC == function) // no mapping available
-        ;//error("pinmap not found for function");
-    return function;
-}
