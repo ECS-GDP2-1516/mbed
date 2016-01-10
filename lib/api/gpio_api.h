@@ -24,6 +24,16 @@
 extern "C" {
 #endif
 
+typedef struct {
+    PinName  pin;
+    uint32_t mask;
+
+    __IO uint32_t *reg_dir;
+    __IO uint32_t *reg_set;
+    __IO uint32_t *reg_clr;
+    __I  uint32_t *reg_in;
+} gpio_t;
+
 static inline uint32_t gpio_set(PinName pin) {
     MBED_ASSERT(pin != (PinName)NC);
     int f = ((pin == P0_0)  ||
@@ -52,6 +62,19 @@ static inline void gpio_init(gpio_t *obj, PinName pin) {
     obj->reg_clr = &LPC_GPIO->CLR[port];
     obj->reg_in  = &LPC_GPIO->PIN[port];
     obj->reg_dir = &LPC_GPIO->DIR[port];
+}
+
+static inline void gpio_write(gpio_t *obj, int value) {
+    MBED_ASSERT(obj->pin != (PinName)NC);
+    if (value)
+        *obj->reg_set = obj->mask;
+    else
+        *obj->reg_clr = obj->mask;
+}
+
+static inline int gpio_read(gpio_t *obj) {
+    MBED_ASSERT(obj->pin != (PinName)NC);
+    return ((*obj->reg_in & obj->mask) ? 1 : 0);
 }
 
 #ifdef __cplusplus

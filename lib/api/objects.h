@@ -57,8 +57,6 @@ struct spi_s {
     LPC_SSPx_Type *spi;
 };
 
-#include "gpio_object.h"
-
 #ifdef __cplusplus
 }
 #endif
