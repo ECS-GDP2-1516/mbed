@@ -51,8 +51,6 @@ static inline uint32_t gpio_set(PinName pin) {
 
 static inline void gpio_init(gpio_t *obj, PinName pin) {
     obj->pin = pin;
-    if (pin == (PinName)NC)
-        return;
 
     obj->mask = gpio_set(pin);
     
