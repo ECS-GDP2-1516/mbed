@@ -17,9 +17,7 @@
 #include "pinmap.h"
 
 void pin_function(PinName pin, int function) {
-    MBED_ASSERT(pin != (PinName)NC);
-    if (pin == (PinName)NC) return;
-    
+
     uint32_t pin_number = (uint32_t)pin;
     
     __IO uint32_t *reg = (pin_number < 32) ?
