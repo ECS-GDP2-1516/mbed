@@ -18,6 +18,7 @@
 
 #include "platform.h"
 #include "gpio_api.h"
+ #include "pinmap.h"
 
 namespace mbed {
 
@@ -49,7 +50,7 @@ public:
         gpio_init(&gpio, pin);
         gpio_write(&gpio, 0);
         gpio_dir(&gpio, PIN_OUTPUT);
-        gpio_mode(&gpio, PullNone);
+        pin_mode(gpio.pin, PullNone);
     }
 
     /** Set the output, specified as 0 or 1 (int)

@@ -47,10 +47,6 @@ void gpio_init(gpio_t *obj, PinName pin) {
     obj->reg_dir = &LPC_GPIO->DIR[port];
 }
 
-void gpio_mode(gpio_t *obj, PinMode mode) {
-    pin_mode(obj->pin, mode);
-}
-
 void gpio_dir(gpio_t *obj, PinDirection direction) {
     MBED_ASSERT(obj->pin != (PinName)NC);
     switch (direction) {
