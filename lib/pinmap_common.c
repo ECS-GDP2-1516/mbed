@@ -16,6 +16,7 @@
 #include "pinmap.h"
 
 void pinmap_pinout(PinName pin, const PinMap *map) {
+    // KEEP! CAN BE PASSED A PIN FROM pinmap_peripheral!
     if (pin == NC)
         return;
 

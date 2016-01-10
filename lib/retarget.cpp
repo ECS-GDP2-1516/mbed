@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "platform.h"
-#include "serial_api.h"
 #include "toolchain.h"
 #include "mbed_interface.h"
 #if DEVICE_STDIO_MESSAGES

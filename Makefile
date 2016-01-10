@@ -3,7 +3,7 @@
 
 GCC_BIN = 
 PROJECT = mbed_blinky
-OBJECTS = ./lib/i2c_api.o ./lib/pinmap.o ./lib/serial_api.o ./lib/pinmap_common.o ./lib/system_LPC11Uxx.o  ./lib/PeripheralPins.o ./lib/I2C.o ./main.o ./classify.o ./lib/I2Cdev.o ./lib/MPU6050.o ./lib/retarget.o ./lib/startup_LPC11xx.o
+OBJECTS = ./lib/i2c_api.o ./lib/pinmap.o ./lib/pinmap_common.o ./lib/system_LPC11Uxx.o  ./lib/PeripheralPins.o ./lib/I2C.o ./main.o ./classify.o ./lib/I2Cdev.o ./lib/MPU6050.o ./lib/retarget.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./LPC11U24.ld
 
