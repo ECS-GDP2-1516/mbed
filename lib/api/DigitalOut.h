@@ -21,6 +21,16 @@
 
 namespace mbed {
 
+static inline void _in_gpio_init_out(gpio_t* gpio, PinName pin, PinMode mode, int value)
+{
+    gpio_init(gpio, pin);
+    if (pin != NC) {
+        gpio_write(gpio, value);
+        gpio_dir(gpio, PIN_OUTPUT);
+        gpio_mode(gpio, mode);
+    }
+}
+
 /** A digital output, used for setting the state of a pin
  *
  * Example:
@@ -46,16 +56,7 @@ public:
      *  @param pin DigitalOut pin to connect to
      */
     DigitalOut(PinName pin) : gpio() {
-        gpio_init_out(&gpio, pin);
-    }
-
-    /** Create a DigitalOut connected to the specified pin
-     *
-     *  @param pin DigitalOut pin to connect to
-     *  @param value the initial pin value
-     */
-    DigitalOut(PinName pin, int value) : gpio() {
-        gpio_init_out_ex(&gpio, pin, value);
+        _in_gpio_init_out(&gpio, pin, PullNone, 0);
     }
 
     /** Set the output, specified as 0 or 1 (int)
@@ -67,43 +68,12 @@ public:
         gpio_write(&gpio, value);
     }
 
-    /** Return the output setting, represented as 0 or 1 (int)
-     *
-     *  @returns
-     *    an integer representing the output setting of the pin,
-     *    0 for logical 0, 1 for logical 1
-     */
-    int read() {
-        return gpio_read(&gpio);
-    }
-
-    /** Return the output setting, represented as 0 or 1 (int)
-     *
-     *  @returns
-     *    Non zero value if pin is connected to uc GPIO
-     *    0 if gpio object was initialized with NC
-     */
-    int is_connected() {
-        return gpio_is_connected(&gpio);
-    }
-
 #ifdef MBED_OPERATORS
     /** A shorthand for write()
      */
     DigitalOut& operator= (int value) {
         write(value);
         return *this;
-    }
-
-    DigitalOut& operator= (DigitalOut& rhs) {
-        write(rhs.read());
-        return *this;
-    }
-
-    /** A shorthand for read()
-     */
-    operator int() {
-        return read();
     }
 #endif
 

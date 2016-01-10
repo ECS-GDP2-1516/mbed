@@ -15,15 +15,6 @@
  */
 #include "gpio_api.h"
 
-static inline void _gpio_init_in(gpio_t* gpio, PinName pin, PinMode mode)
-{
-    gpio_init(gpio, pin);
-    if (pin != NC) {
-        gpio_dir(gpio, PIN_INPUT);
-        gpio_mode(gpio, mode);
-    }
-}
-
 static inline void _gpio_init_out(gpio_t* gpio, PinName pin, PinMode mode, int value)
 {
     gpio_init(gpio, pin);
@@ -34,28 +25,10 @@ static inline void _gpio_init_out(gpio_t* gpio, PinName pin, PinMode mode, int v
     }
 }
 
-void gpio_init_in(gpio_t* gpio, PinName pin) {
-    gpio_init_in_ex(gpio, pin, PullDefault);
-}
-
-void gpio_init_in_ex(gpio_t* gpio, PinName pin, PinMode mode) {
-    _gpio_init_in(gpio, pin, mode);
-}
-
 void gpio_init_out(gpio_t* gpio, PinName pin) {
     gpio_init_out_ex(gpio, pin, 0);
 }
 
 void gpio_init_out_ex(gpio_t* gpio, PinName pin, int value) {
     _gpio_init_out(gpio, pin, PullNone, value);
-}
-
-void gpio_init_inout(gpio_t* gpio, PinName pin, PinDirection direction, PinMode mode, int value) {
-    if (direction == PIN_INPUT) {
-        _gpio_init_in(gpio, pin, mode);
-        if (pin != NC)
-            gpio_write(gpio, value); // we prepare the value in case it is switched later
-    } else {
-        _gpio_init_out(gpio, pin, mode, value);
-    }
 }
