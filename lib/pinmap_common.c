@@ -47,24 +47,13 @@ uint32_t pinmap_merge(uint32_t a, uint32_t b) {
     return (uint32_t)NC;
 }
 
-uint32_t pinmap_find_peripheral(PinName pin, const PinMap* map) {
+uint32_t pinmap_peripheral(PinName pin, const PinMap* map) {
     while (map->pin != NC) {
         if (map->pin == pin)
             return map->peripheral;
         map++;
     }
     return (uint32_t)NC;
-}
-
-uint32_t pinmap_peripheral(PinName pin, const PinMap* map) {
-    uint32_t peripheral = (uint32_t)NC;
-
-    if (pin == (PinName)NC)
-        return (uint32_t)NC;
-    peripheral = pinmap_find_peripheral(pin, map);
-    if ((uint32_t)NC == peripheral) // no mapping available
-        ;//error("pinmap not found for peripheral");
-    return peripheral;
 }
 
 uint32_t pinmap_find_function(PinName pin, const PinMap* map) {
