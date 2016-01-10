@@ -17,7 +17,7 @@
 #include "i2c_api.h"
 #include "LPC11Uxx.h"
 #include "pinmap.h"
-#include "PeripheralPins.h" // For the Peripheral to Pin Definitions found in the individual Target's Platform
+
 
 #define I2C_CONSET(x)       (x->i2c->CONSET)
 #define I2C_CONCLR(x)       (x->i2c->CONCLR)
