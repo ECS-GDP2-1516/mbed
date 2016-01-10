@@ -49,7 +49,7 @@ public:
     DigitalOut(PinName pin) : gpio() {
         gpio_init(&gpio, pin);
         gpio_write(&gpio, 0);
-        gpio_dir(&gpio, PIN_OUTPUT);
+        *gpio.reg_dir |=  gpio.mask;
         pin_mode(gpio.pin, PullNone);
     }
 
