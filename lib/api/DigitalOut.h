@@ -16,7 +16,14 @@
 #ifndef MBED_DIGITALOUT_H
 #define MBED_DIGITALOUT_H
 
-#include "platform.h"
+#include "device.h"
+#include "PinNames.h"
+#include "PeripheralNames.h"
+
+#include <cstddef>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include "gpio_api.h"
 #include "pinmap.h"
 
@@ -62,14 +69,12 @@ public:
         gpio_write(&gpio, value);
     }
 
-#ifdef MBED_OPERATORS
     /** A shorthand for write()
      */
     DigitalOut& operator= (int value) {
         write(value);
         return *this;
     }
-#endif
 
 protected:
     gpio_t gpio;

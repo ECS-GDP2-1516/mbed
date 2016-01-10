@@ -17,7 +17,7 @@
 #define MBED_I2C_API_H
 
 #include "device.h"
-#include "buffer.h"
+#include "PinNames.h"
 
 #if DEVICE_I2C
 

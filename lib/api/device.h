@@ -54,6 +54,10 @@
 
 #define DEVICE_ERROR_PATTERN    0
 
-#include "objects.h"
+#include "LPC11Uxx.h"
+
+struct i2c_s {
+    LPC_I2C_Type *i2c;
+};
 
 #endif

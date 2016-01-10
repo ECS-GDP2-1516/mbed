@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "mbed_assert.h"
 #include "i2c_api.h"
 #include "LPC11Uxx.h"
 #include "pinmap.h"
-
+ #include "PeripheralNames.h"
 
 #define I2C_CONSET(x)       (x->i2c->CONSET)
 #define I2C_CONCLR(x)       (x->i2c->CONCLR)

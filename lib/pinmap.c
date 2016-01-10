@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "mbed_assert.h"
 #include "pinmap.h"
 
 void pin_function(PinName pin, int function) {
@@ -29,7 +28,6 @@ void pin_function(PinName pin, int function) {
 }
 
 void pin_mode(PinName pin, PinMode mode) {
-    MBED_ASSERT(pin != (PinName)NC);
     uint32_t pin_number = (uint32_t)pin;
     uint32_t drain = ((uint32_t) mode & (uint32_t) OpenDrain) >> 2;
     

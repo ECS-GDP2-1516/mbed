@@ -18,7 +18,6 @@
 
 #include "device.h"
 #include "pinmap.h"
-#include "mbed_assert.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +34,6 @@ typedef struct {
 } gpio_t;
 
 static inline uint32_t gpio_set(PinName pin) {
-    MBED_ASSERT(pin != (PinName)NC);
     int f = ((pin == P0_0)  ||
              (pin == P0_10) ||
              (pin == P0_11) ||
@@ -63,7 +61,6 @@ static inline void gpio_init(gpio_t *obj, PinName pin) {
 }
 
 static inline void gpio_write(gpio_t *obj, int value) {
-    MBED_ASSERT(obj->pin != (PinName)NC);
     if (value)
         *obj->reg_set = obj->mask;
     else
@@ -71,7 +68,6 @@ static inline void gpio_write(gpio_t *obj, int value) {
 }
 
 static inline int gpio_read(gpio_t *obj) {
-    MBED_ASSERT(obj->pin != (PinName)NC);
     return ((*obj->reg_in & obj->mask) ? 1 : 0);
 }
 

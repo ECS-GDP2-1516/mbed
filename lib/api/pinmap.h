@@ -17,7 +17,6 @@
 #define MBED_PINMAP_H
 
 #include "PinNames.h"
-#include "mbed_assert.h"
 
 #ifdef __cplusplus
 extern "C" {

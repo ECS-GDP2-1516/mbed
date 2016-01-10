@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "platform.h"
+#include "device.h"
+#include "PinNames.h"
+#include "PeripheralNames.h"
+#include <cstddef>
+#include <cstdio>
 #include "toolchain.h"
-#include "mbed_interface.h"
 #if DEVICE_STDIO_MESSAGES
 #include <stdio.h>
 #endif

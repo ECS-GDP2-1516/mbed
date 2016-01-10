@@ -16,17 +16,14 @@
 #ifndef MBED_I2C_H
 #define MBED_I2C_H
 
-#include "platform.h"
+#include "device.h"
+#include "PinNames.h"
+#include "PeripheralNames.h"
+#include <cstddef>
 
 #if DEVICE_I2C
 
 #include "i2c_api.h"
-
-#if DEVICE_I2C_ASYNCH
-#include "CThunk.h"
-#include "dma_api.h"
-#include "FunctionPointer.h"
-#endif
 
 namespace mbed {
 
