@@ -75,10 +75,8 @@ static inline void i2c_power_enable(i2c_t *obj) {
 
 void i2c_init(i2c_t *obj, PinName sda, PinName scl) {
     // determine the SPI to use
-    I2CName i2c_sda = (I2CName)pinmap_peripheral(sda, PinMap_I2C_SDA);
-    I2CName i2c_scl = (I2CName)pinmap_peripheral(scl, PinMap_I2C_SCL);
-    obj->i2c = (LPC_I2C_Type *)pinmap_merge(i2c_sda, i2c_scl);
-    MBED_ASSERT((int)obj->i2c != NC);
+
+    obj->i2c = (LPC_I2C_Type *)I2C_0;
     
     // enable power
     i2c_power_enable(obj);
@@ -87,9 +85,12 @@ void i2c_init(i2c_t *obj, PinName sda, PinName scl) {
     i2c_frequency(obj, 100000);
     i2c_conclr(obj, 1, 1, 1, 1);
     i2c_interface_enable(obj);
-    
-    pinmap_pinout(sda, PinMap_I2C_SDA);
-    pinmap_pinout(scl, PinMap_I2C_SCL);
+
+    pin_function(sda, 1);
+    pin_mode(sda, PullNone);
+    pin_function(scl, 1);
+    pin_mode(scl, PullNone);
+
 }
 
 inline int i2c_start(i2c_t *obj) {
