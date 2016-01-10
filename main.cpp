@@ -79,7 +79,7 @@ int main() {
         accelgyro.getAcceleration(&ax, &ay, &az);
         insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
     }
-
+    myled2 = 1;
     //now we continue to read values and classify them
     while(1) {
         accelgyro.getAcceleration(&ax, &ay, &az);
