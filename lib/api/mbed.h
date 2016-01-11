@@ -19,7 +19,6 @@
 #define MBED_LIBRARY_VERSION 109
 
 #include "DigitalOut.h"
-#include "I2C.h"
 
 using namespace mbed;
 using namespace std;

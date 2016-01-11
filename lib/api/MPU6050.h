@@ -37,7 +37,7 @@ THE SOFTWARE.
 #ifndef _MPU6050_H_
 #define _MPU6050_H_
 
-#include "I2C.h"
+#include "i2c_api.h"
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 
@@ -399,20 +399,23 @@ THE SOFTWARE.
 
 class MPU6050 {
     public:
-        MPU6050();
-
-        void initialize();
+        MPU6050(PinName sda, PinName scl);
 
         void getAcceleration(int16_t* x, int16_t* y, int16_t* z);
 
-        static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
+        int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
 
-        static void writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
-        static void writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
-        static void writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
+        void writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
+        void writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
+        void writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
+
+        int read(char *data, int length, bool repeated = false);
+        int write(const char *data, int length, bool repeated = false);
         
     private:
         uint8_t buffer[14];
+        i2c_t _i2c;
+        int         _hz;
 };
 
 #endif /* _MPU6050_H_ */

@@ -36,12 +36,12 @@ THE SOFTWARE.
 #include "MPU6050.h"
 #include "mbed.h"
 
-I2C i2c(p28, p27);
 
 /** Default constructor, uses default I2C address.
  * @see MPU6050_DEFAULT_ADDRESS
  */
-MPU6050::MPU6050() {
+MPU6050::MPU6050(PinName sda, PinName scl) : _i2c(), _hz(100000) {
+    i2c_init(&_i2c, sda, scl);
     writeBits(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, MPU6050_CLOCK_PLL_XGYRO);
     writeBits(MPU6050_RA_GYRO_CONFIG, MPU6050_GCONFIG_FS_SEL_BIT, MPU6050_GCONFIG_FS_SEL_LENGTH, MPU6050_GYRO_FS_250);
     writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, MPU6050_ACCEL_FS_2);
@@ -93,9 +93,9 @@ void MPU6050::getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
 }
 
 int8_t MPU6050::readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
-    if(i2c.write((const char *)&regAddr, 1))
+    if(write((const char *)&regAddr, 1))
         return -1;
-    int ret = i2c.read((char *)data, length);
+    int ret = read((char *)data, length);
     return ret;
 }
 
@@ -124,5 +124,21 @@ void MPU6050::writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     send[0] = regAddr;
     for(int i = 0; i < length; i++)
         send[i + 1] = data[i];
-    i2c.write((const char *)send, length + 1);
+    write((const char *)send, length + 1);
+}
+
+// write - Master Transmitter Mode
+int MPU6050::write(const char* data, int length, bool repeated) {
+    int stop = (repeated) ? 0 : 1;
+    int written = i2c_write(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length, stop);
+
+    return length != written;
+}
+
+// read - Master Reciever Mode
+int MPU6050::read(char* data, int length, bool repeated) {
+    int stop = (repeated) ? 0 : 1;
+    int read = i2c_read(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length, stop);
+
+    return length != read;
 }

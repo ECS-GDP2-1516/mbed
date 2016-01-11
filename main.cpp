@@ -11,7 +11,7 @@
 #define Ay_offset 0.02
 #define Az_offset 0.14
 
-MPU6050 accelgyro;
+MPU6050 accelgyro(p28, p27);
 
 //Serial serial(p9, p10);
 DigitalOut myled(LED2);
