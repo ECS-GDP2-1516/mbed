@@ -37,8 +37,7 @@ THE SOFTWARE.
 #ifndef _MPU6050_H_
 #define _MPU6050_H_
 
-#include "I2Cdev.h"
-//#include <avr/pgmspace.h>
+#include "I2C.h"
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 

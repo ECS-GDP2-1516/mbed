@@ -34,6 +34,7 @@ THE SOFTWARE.
 */
 
 #include "MPU6050.h"
+#include "mbed.h"
 
 I2C i2c(p28, p27);
 
