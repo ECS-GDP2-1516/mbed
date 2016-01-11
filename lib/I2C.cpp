@@ -21,14 +21,9 @@
 
 namespace mbed {
 
-I2C *I2C::_owner = NULL;
-
 I2C::I2C(PinName sda, PinName scl) : _i2c(), _hz(100000) {
     // The init function also set the frequency to 100000
     i2c_init(&_i2c, sda, scl);
-
-    // Used to avoid unnecessary frequency updates
-    _owner = this;
 }
 
 void I2C::frequency(int hz) {
@@ -36,22 +31,10 @@ void I2C::frequency(int hz) {
 
     // We want to update the frequency even if we are already the bus owners
     i2c_frequency(&_i2c, _hz);
-
-    // Updating the frequency of the bus we become the owners of it
-    _owner = this;
-}
-
-void I2C::aquire() {
-    if (_owner != this) {
-        i2c_frequency(&_i2c, _hz);
-        _owner = this;
-    }
 }
 
 // write - Master Transmitter Mode
 int I2C::write(const char* data, int length, bool repeated) {
-    aquire();
-
     int stop = (repeated) ? 0 : 1;
     int written = i2c_write(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length, stop);
 
@@ -60,8 +43,6 @@ int I2C::write(const char* data, int length, bool repeated) {
 
 // read - Master Reciever Mode
 int I2C::read(char* data, int length, bool repeated) {
-    aquire();
-
     int stop = (repeated) ? 0 : 1;
     int read = i2c_read(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length, stop);
 
