@@ -49,7 +49,7 @@ MPU6050::MPU6050(PinName sda, PinName scl) : _i2c() {
     uint8_t b;
     readBytes(MPU6050_RA_PWR_MGMT_1, 1, &b);
     b = b & ~(1 << MPU6050_PWR1_SLEEP_BIT);
-    writeBytes(MPU6050_RA_PWR_MGMT_1, 1, &b);
+    writeBytes(MPU6050_RA_PWR_MGMT_1, &b);
 }
 
 
@@ -115,15 +115,14 @@ void MPU6050::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8
     b &= ~(mask);
     b |= data;
     
-    writeBytes(regAddr, 1, &b);
+    writeBytes(regAddr, &b);
 }
 
-void MPU6050::writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
-    uint8_t send[length + 1];
+void MPU6050::writeBytes(uint8_t regAddr, uint8_t *data) {
+    uint8_t send[2];
     send[0] = regAddr;
-    for(int i = 0; i < length; i++)
-        send[i + 1] = data[i];
-    write((const char *)send, length + 1);
+    send[1] = data[0];
+    write((const char *)send, 2);
 }
 
 // write - Master Transmitter Mode
