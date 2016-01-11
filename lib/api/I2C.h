@@ -66,12 +66,6 @@ public:
      */
     I2C(PinName sda, PinName scl);
 
-    /** Set the frequency of the I2C interface
-     *
-     *  @param hz The bus frequency in hertz
-     */
-    void frequency(int hz);
-
     /** Read from an I2C slave
      *
      * Performs a complete read transaction. The bottom bit of
@@ -105,8 +99,6 @@ public:
     int write(const char *data, int length, bool repeated = false);
 
 protected:
-    void aquire();
-
     i2c_t _i2c;
     int         _hz;
 };

@@ -26,13 +26,6 @@ I2C::I2C(PinName sda, PinName scl) : _i2c(), _hz(100000) {
     i2c_init(&_i2c, sda, scl);
 }
 
-void I2C::frequency(int hz) {
-    _hz = hz;
-
-    // We want to update the frequency even if we are already the bus owners
-    i2c_frequency(&_i2c, _hz);
-}
-
 // write - Master Transmitter Mode
 int I2C::write(const char* data, int length, bool repeated) {
     int stop = (repeated) ? 0 : 1;
