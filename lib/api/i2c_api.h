@@ -258,11 +258,7 @@ int i2c_write(const char *data, int length) {
     return length;
 }
 
-int i2c_byte_write(int data) {
-    i2c_do_write((data & 0xFF), 0);
 
-    return 0;
-}
 
 
 #endif
