@@ -14,60 +14,17 @@
  * limitations under the License.
  */
 #include "PinNames.h"
-#include <cstddef>
-#include <cstdio>
 #include "toolchain.h"
-#if DEVICE_STDIO_MESSAGES
-#include <stdio.h>
-#endif
+
 #include <errno.h>
 
-#if defined(__ARMCC_VERSION)
-#   include <rt_sys.h>
-#   define PREFIX(x)    _sys##x
-#   define OPEN_MAX     _SYS_OPEN
-#   ifdef __MICROLIB
-#       pragma import(__use_full_stdio)
-#   endif
-
-#elif defined(__ICCARM__)
-#   include <yfuns.h>
-#   define PREFIX(x)        _##x
-#   define OPEN_MAX         16
-
-#   define STDIN_FILENO     0
-#   define STDOUT_FILENO    1
-#   define STDERR_FILENO    2
-
-#else
-#   include <sys/stat.h>
 #   include <sys/unistd.h>
-#   include <sys/syslimits.h>
-#   define PREFIX(x)    x
-#endif
-
-//using namespace mbed;
-
-#if defined(__MICROLIB) && (__ARMCC_VERSION>5030000)
-// Before version 5.03, we were using a patched version of microlib with proper names
-extern const char __stdin_name[]  = ":tt";
-extern const char __stdout_name[] = ":tt";
-extern const char __stderr_name[] = ":tt";
-
-#else
-extern const char __stdin_name[]  = "/stdin";
-extern const char __stdout_name[] = "/stdout";
-extern const char __stderr_name[] = "/stderr";
-#endif
-
 
 // ****************************************************************************
 // mbed_main is a function that is called before main()
 // mbed_sdk_init() is also a function that is called before main(), but unlike
 // mbed_main(), it is not meant for user code, but for the SDK itself to perform
 // initializations before main() is called.
-
-
 
 extern "C" int __real_main(void);
 
@@ -88,22 +45,13 @@ extern "C" int __end__;
 #undef errno
 extern "C" int errno;
 
-// For ARM7 only
-register unsigned char * stack_ptr __asm ("sp");
-
 // Dynamic memory allocation related syscall.
 extern "C" caddr_t _sbrk(int incr) {
     static unsigned char* heap = (unsigned char*)&__end__;
     unsigned char*        prev_heap = heap;
     unsigned char*        new_heap = heap + incr;
 
-#if defined(TARGET_ARM7)
-    if (new_heap >= stack_ptr) {
-#elif defined(TARGET_CORTEX_A)
-    if (new_heap >= (unsigned char*)&__HeapLimit) {     /* __HeapLimit is end of heap section */
-#else
     if (new_heap >= (unsigned char*)__get_MSP()) {
-#endif
         errno = ENOMEM;
         return (caddr_t)-1;
     }
