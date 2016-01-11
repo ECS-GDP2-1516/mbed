@@ -12,31 +12,30 @@ int8_t I2Cdev::readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     return ret;
 }
 
-bool I2Cdev::writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data) {
+void I2Cdev::writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data) {
     uint8_t b;
     readBytes(regAddr, 1, &b);
     b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
-    return writeBytes(regAddr, 1, &b);
+    writeBytes(regAddr, 1, &b);
 }
 
-bool I2Cdev::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data) {
+void I2Cdev::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data) {
     uint8_t b;
     if(readBytes(regAddr, 1, &b))
-        return true;
+        return;
     uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
     data <<= (bitStart - length + 1);
     data &= mask;
     b &= ~(mask);
     b |= data;
-    return writeBytes(regAddr, 1, &b);
+    
+    writeBytes(regAddr, 1, &b);
 }
 
-bool I2Cdev::writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
+void I2Cdev::writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     uint8_t send[length + 1];
     send[0] = regAddr;
     for(int i = 0; i < length; i++)
         send[i + 1] = data[i];
-    if(i2c.write((const char *)send, length + 1))
-        return true;
-    return false;
+    i2c.write((const char *)send, length + 1);
 }
