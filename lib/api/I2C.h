@@ -88,15 +88,6 @@ public:
      */
     int read(char *data, int length, bool repeated = false);
 
-    /** Read a single byte from the I2C bus
-     *
-     *  @param ack indicates if the byte is to be acknowledged (1 = acknowledge)
-     *
-     *  @returns
-     *    the byte read
-     */
-    int read(int ack);
-
     /** Write to an I2C slave
      *
      * Performs a complete write transaction. The bottom bit of
@@ -112,51 +103,6 @@ public:
      *   non-0 on failure (nack)
      */
     int write(const char *data, int length, bool repeated = false);
-
-    /** Write single byte out on the I2C bus
-     *
-     *  @param data data to write out on bus
-     *
-     *  @returns
-     *    '1' if an ACK was received,
-     *    '0' otherwise
-     */
-    int write(int data);
-
-    /** Creates a start condition on the I2C bus
-     */
-
-    void start(void);
-
-    /** Creates a stop condition on the I2C bus
-     */
-    void stop(void);
-
-#if DEVICE_I2C_ASYNCH
-
-    /** Start non-blocking I2C transfer.
-     *
-     * @param address   8/10 bit I2c slave address
-     * @param tx_buffer The TX buffer with data to be transfered
-     * @param tx_length The length of TX buffer in bytes
-     * @param rx_buffer The RX buffer which is used for received data
-     * @param rx_length The length of RX buffer in bytes
-     * @param event     The logical OR of events to modify
-     * @param callback  The event callback function
-     * @param repeated Repeated start, true - do not send stop at end
-     * @return Zero if the transfer has started, or -1 if I2C peripheral is busy
-     */
-    int transfer(const char *tx_buffer, int tx_length, char *rx_buffer, int rx_length, const event_callback_t& callback, int event = I2C_EVENT_TRANSFER_COMPLETE, bool repeated = false);
-
-    /** Abort the on-going I2C transfer
-     */
-    void abort_transfer();
-protected:
-    void irq_handler_asynch(void);
-    event_callback_t _callback;
-    CThunk<I2C> _irq;
-    DMAUsage _usage;
-#endif
 
 protected:
     void aquire();
