@@ -43,7 +43,7 @@ THE SOFTWARE.
 MPU6050::MPU6050(PinName sda, PinName scl) : _i2c() {
     i2c_init(&_i2c, sda, scl);
 
-    writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x41);
+    writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x01);
     writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
     writeBits(MPU6050_RA_ACCEL_CONFIG, 0xE7, 0x00);
 }
