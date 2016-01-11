@@ -86,7 +86,7 @@ public:
      *       0 on success (ack),
      *   non-0 on failure (nack)
      */
-    int read(int address, char *data, int length, bool repeated = false);
+    int read(char *data, int length, bool repeated = false);
 
     /** Read a single byte from the I2C bus
      *
@@ -111,7 +111,7 @@ public:
      *       0 on success (ack),
      *   non-0 on failure (nack)
      */
-    int write(int address, const char *data, int length, bool repeated = false);
+    int write(const char *data, int length, bool repeated = false);
 
     /** Write single byte out on the I2C bus
      *
@@ -146,7 +146,7 @@ public:
      * @param repeated Repeated start, true - do not send stop at end
      * @return Zero if the transfer has started, or -1 if I2C peripheral is busy
      */
-    int transfer(int address, const char *tx_buffer, int tx_length, char *rx_buffer, int rx_length, const event_callback_t& callback, int event = I2C_EVENT_TRANSFER_COMPLETE, bool repeated = false);
+    int transfer(const char *tx_buffer, int tx_length, char *rx_buffer, int rx_length, const event_callback_t& callback, int event = I2C_EVENT_TRANSFER_COMPLETE, bool repeated = false);
 
     /** Abort the on-going I2C transfer
      */

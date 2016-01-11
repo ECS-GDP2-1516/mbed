@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 #include "I2C.h"
+#include "MPU6050.h"
+
 
 #if DEVICE_I2C
 
@@ -51,11 +53,11 @@ void I2C::aquire() {
 }
 
 // write - Master Transmitter Mode
-int I2C::write(int address, const char* data, int length, bool repeated) {
+int I2C::write(const char* data, int length, bool repeated) {
     aquire();
 
     int stop = (repeated) ? 0 : 1;
-    int written = i2c_write(&_i2c, address, data, length, stop);
+    int written = i2c_write(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length, stop);
 
     return length != written;
 }
@@ -65,11 +67,11 @@ int I2C::write(int data) {
 }
 
 // read - Master Reciever Mode
-int I2C::read(int address, char* data, int length, bool repeated) {
+int I2C::read(char* data, int length, bool repeated) {
     aquire();
 
     int stop = (repeated) ? 0 : 1;
-    int read = i2c_read(&_i2c, address, data, length, stop);
+    int read = i2c_read(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length, stop);
 
     return length != read;
 }
@@ -92,7 +94,7 @@ void I2C::stop(void) {
 
 #if DEVICE_I2C_ASYNCH
 
-int I2C::transfer(int address, const char *tx_buffer, int tx_length, char *rx_buffer, int rx_length, const event_callback_t& callback, int event, bool repeated)
+int I2C::transfer(const char *tx_buffer, int tx_length, char *rx_buffer, int rx_length, const event_callback_t& callback, int event, bool repeated)
 {
     if (i2c_active(&_i2c)) {
         return -1; // transaction ongoing
@@ -102,7 +104,7 @@ int I2C::transfer(int address, const char *tx_buffer, int tx_length, char *rx_bu
     _callback = callback;
     int stop = (repeated) ? 0 : 1;
     _irq.callback(&I2C::irq_handler_asynch);
-    i2c_transfer_asynch(&_i2c, (void *)tx_buffer, tx_length, (void *)rx_buffer, rx_length, address, stop, _irq.entry(), event, _usage);
+    i2c_transfer_asynch(&_i2c, (void *)tx_buffer, tx_length, (void *)rx_buffer, rx_length, MPU6050_DEFAULT_ADDRESS, stop, _irq.entry(), event, _usage);
     return 0;
 }
 
