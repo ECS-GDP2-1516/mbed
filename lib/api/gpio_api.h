@@ -34,15 +34,11 @@ typedef struct {
 } gpio_t;
 
 static inline uint32_t gpio_set(PinName pin) {
-    int f = ((pin == P0_0)  ||
-             (pin == P0_10) ||
-             (pin == P0_11) ||
-             (pin == P0_12) ||
-             (pin == P0_13) ||
-             (pin == P0_14) ||
-             (pin == P0_15)) ? (1) : (0);
+    uint32_t pin_number = (uint32_t)pin;
+    __IO uint32_t *reg = (__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (pin_number - 32));
     
-    pin_function(pin, f);
+    // pin function bits: [2:0] -> 111 = (0x7)
+    *reg = (*reg & ~0x7);
     
     return (1 << ((int)pin & 0x1F));
 }
