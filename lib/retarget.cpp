@@ -67,41 +67,15 @@ extern const char __stderr_name[] = "/stderr";
 // mbed_main(), it is not meant for user code, but for the SDK itself to perform
 // initializations before main() is called.
 
-extern "C" WEAK void mbed_main(void);
-extern "C" WEAK void mbed_main(void) {
-}
 
-extern "C" WEAK void mbed_sdk_init(void);
-extern "C" WEAK void mbed_sdk_init(void) {
-}
 
-#if defined(TOOLCHAIN_ARM)
-extern "C" int $Super$$main(void);
-
-extern "C" int $Sub$$main(void) {
-    mbed_sdk_init();
-    mbed_main();
-    return $Super$$main();
-}
-#elif defined(TOOLCHAIN_GCC)
 extern "C" int __real_main(void);
 
 extern "C" int __wrap_main(void) {
-    mbed_sdk_init();
-    mbed_main();
+    //mbed_sdk_init();
+    //mbed_main();
     return __real_main();
 }
-#elif defined(TOOLCHAIN_IAR)
-// IAR doesn't have the $Super/$Sub mechanism of armcc, nor something equivalent
-// to ld's --wrap. It does have a --redirect, but that doesn't help, since redirecting
-// 'main' to another symbol looses the original 'main' symbol. However, its startup
-// code will call a function to setup argc and argv (__iar_argc_argv) if it is defined.
-// Since mbed doesn't use argc/argv, we use this function to call our mbed_main.
-extern "C" void __iar_argc_argv() {
-    mbed_sdk_init();
-    mbed_main();
-}
-#endif
 
 // Provide implementation of _sbrk (low-level dynamic memory allocation
 // routine) for GCC_ARM which compares new heap pointer with MSP instead of
@@ -109,10 +83,6 @@ extern "C" void __iar_argc_argv() {
 #if defined(TOOLCHAIN_GCC_ARM)
 // Linker defined symbol used by _sbrk to indicate where heap should start.
 extern "C" int __end__;
-
-#if defined(TARGET_CORTEX_A)
-extern "C" uint32_t  __HeapLimit;
-#endif
 
 // Turn off the errno macro and use actual global variable instead.
 #undef errno
