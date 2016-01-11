@@ -397,22 +397,52 @@ THE SOFTWARE.
 
 // note: DMP code memory blocks defined at end of header file
 
-class MPU6050 {
-    public:
-        MPU6050();
+i2c_t _i2c;
 
-        void getAcceleration(int16_t* x, int16_t* y, int16_t* z);
+int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
+    int written = i2c_write(&_i2c, (const char *)&regAddr, 1);
+    if(length != written)
+        return -1;
 
-        int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
+    int read = i2c_read(&_i2c, (char *)data, length);
 
-        void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data);
-        void writeBytes(uint8_t regAddr, uint8_t *data);
+    return length != read;
+}
 
-        int write(const char *data, int length);
-        
-    private:
-        uint8_t buffer[14];
-        i2c_t _i2c;
-};
+void writeBytes(uint8_t regAddr, uint8_t *data) {
+    uint8_t send[2];
+    send[0] = regAddr;
+    send[1] = data[0];
+    i2c_write(&_i2c, (const char *)send, 2);
+}
+
+void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data) {
+    uint8_t b;
+    if(readBytes(regAddr, 1, &b))
+        return;
+
+    b &= mask;
+    b |= data;
+    
+    writeBytes(regAddr, &b);
+}
+
+static inline void init()
+{
+    i2c_init(&_i2c);
+
+    writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x01);
+    writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
+    writeBits(MPU6050_RA_ACCEL_CONFIG, 0xE7, 0x00);
+}
+
+static inline void getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
+    uint8_t buffer[6];
+    readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, buffer);
+
+    *x = (((int16_t)buffer[0]) << 8) | buffer[1];
+    *y = (((int16_t)buffer[2]) << 8) | buffer[3];
+    *z = (((int16_t)buffer[4]) << 8) | buffer[5];
+}
 
 #endif /* _MPU6050_H_ */

@@ -11,8 +11,6 @@
 #define Ay_offset 0.02
 #define Az_offset 0.14
 
-MPU6050 accelgyro;
-
 //Serial serial(p9, p10);
 DigitalOut myled(LED2);
 DigitalOut myled2(LED3);
@@ -62,6 +60,7 @@ int main() {
     while (!(LPC_SYSCON->MAINCLKUEN & 0x01));    // Waits for changes to complete
 
     //LPC_USART->ACR = 0x7;
+    init();
 
     //serial.printf("Testing device connections....\n");
     //serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
@@ -75,13 +74,13 @@ int main() {
     
     //first, fill up the buffer with values
     for(count=0; count<BUFFER_SIZE/3; count++) {
-        accelgyro.getAcceleration(&ax, &ay, &az);
+        getAcceleration(&ax, &ay, &az);
         insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
     }
     myled2 = 1;
     //now we continue to read values and classify them
     while(1) {
-        accelgyro.getAcceleration(&ax, &ay, &az);
+        getAcceleration(&ax, &ay, &az);
 
         insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
 
