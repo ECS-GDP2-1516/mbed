@@ -81,7 +81,12 @@ void i2c_init(i2c_t *obj, PinName sda, PinName scl) {
     i2c_power_enable(obj);
     
     // set default frequency at 100k
-    i2c_frequency(obj, 100000);
+    uint32_t PCLK = SystemCoreClock;
+    uint32_t pulse = PCLK / (200000);
+    I2C_SCLL(obj, pulse);
+    I2C_SCLH(obj, pulse);
+
+
     i2c_conclr(obj, 1, 1, 1, 1);
     i2c_interface_enable(obj);
 
@@ -157,17 +162,6 @@ static inline int i2c_do_read(i2c_t *obj, int last) {
     
     // return the data
     return (I2C_DAT(obj) & 0xFF);
-}
-
-void i2c_frequency(i2c_t *obj, int hz) {
-    // No peripheral clock divider on the M0
-    uint32_t PCLK = SystemCoreClock;
-    
-    uint32_t pulse = PCLK / (hz * 2);
-    
-    // I2C Rate
-    I2C_SCLL(obj, pulse);
-    I2C_SCLH(obj, pulse);
 }
 
 // The I2C does a read or a write as a whole operation

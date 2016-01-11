@@ -72,12 +72,6 @@ extern "C" {
  */
 void i2c_init(i2c_t *obj, PinName sda, PinName scl);
 
-/** Configure the I2C frequency.
- *  @param obj The i2c object
- *  @param hz  Frequency in Hz
- */
-void i2c_frequency(i2c_t *obj, int hz);
-
 /** Send START command.
  *  @param obj The i2c object
  */
