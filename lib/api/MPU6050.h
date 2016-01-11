@@ -415,7 +415,6 @@ class MPU6050 {
     private:
         uint8_t buffer[14];
         i2c_t _i2c;
-        int         _hz;
 };
 
 #endif /* _MPU6050_H_ */
