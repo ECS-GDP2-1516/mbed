@@ -253,10 +253,6 @@ int i2c_write(i2c_t *obj, int address, const char *data, int length) {
     return length;
 }
 
-void i2c_reset(i2c_t *obj) {
-    i2c_stop(obj);
-}
-
 int i2c_byte_read(i2c_t *obj, int last) {
     return (i2c_do_read(obj, last) & 0xFF);
 }
