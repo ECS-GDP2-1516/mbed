@@ -408,8 +408,8 @@ class MPU6050 {
         void writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
         void writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
 
-        int read(char *data, int length, bool repeated = false);
-        int write(const char *data, int length, bool repeated = false);
+        int read(char *data, int length);
+        int write(const char *data, int length);
         
     private:
         uint8_t buffer[14];
