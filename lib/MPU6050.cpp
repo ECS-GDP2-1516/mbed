@@ -45,7 +45,11 @@ MPU6050::MPU6050(PinName sda, PinName scl) : _i2c() {
     writeBits(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, MPU6050_CLOCK_PLL_XGYRO);
     writeBits(MPU6050_RA_GYRO_CONFIG, MPU6050_GCONFIG_FS_SEL_BIT, MPU6050_GCONFIG_FS_SEL_LENGTH, MPU6050_GYRO_FS_250);
     writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, MPU6050_ACCEL_FS_2);
-    writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, false);
+
+    uint8_t b;
+    readBytes(MPU6050_RA_PWR_MGMT_1, 1, &b);
+    b = b & ~(1 << MPU6050_PWR1_SLEEP_BIT);
+    writeBytes(MPU6050_RA_PWR_MGMT_1, 1, &b);
 }
 
 
@@ -97,13 +101,6 @@ int8_t MPU6050::readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
         return -1;
     int ret = read((char *)data, length);
     return ret;
-}
-
-void MPU6050::writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data) {
-    uint8_t b;
-    readBytes(regAddr, 1, &b);
-    b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
-    writeBytes(regAddr, 1, &b);
 }
 
 void MPU6050::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data) {

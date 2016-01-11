@@ -405,7 +405,6 @@ class MPU6050 {
 
         int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
 
-        void writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
         void writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
         void writeBytes(uint8_t regAddr, uint8_t length, uint8_t *data);
 
