@@ -99,8 +99,10 @@ void MPU6050::getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
 int8_t MPU6050::readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     if(write((const char *)&regAddr, 1))
         return -1;
-    int ret = read((char *)data, length);
-    return ret;
+
+    int read = i2c_read(&_i2c, MPU6050_DEFAULT_ADDRESS, (char *)data, length);
+
+    return length != read;
 }
 
 void MPU6050::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data) {
@@ -129,11 +131,4 @@ int MPU6050::write(const char* data, int length) {
     int written = i2c_write(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length);
 
     return length != written;
-}
-
-// read - Master Reciever Mode
-int MPU6050::read(char* data, int length) {
-    int read = i2c_read(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length);
-
-    return length != read;
 }
