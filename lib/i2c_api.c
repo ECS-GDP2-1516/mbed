@@ -72,7 +72,7 @@ static inline void i2c_power_enable(i2c_t *obj) {
     LPC_SYSCON->PRESETCTRL |= 1 << 1;
 }
 
-void i2c_init(i2c_t *obj, PinName sda, PinName scl) {
+void i2c_init(i2c_t *obj) {
     // determine the SPI to use
 
     obj->i2c = (LPC_I2C_Type *)I2C_0;
@@ -86,15 +86,14 @@ void i2c_init(i2c_t *obj, PinName sda, PinName scl) {
     I2C_SCLL(obj, pulse);
     I2C_SCLH(obj, pulse);
 
-
     i2c_conclr(obj, 1, 1, 1, 1);
     i2c_interface_enable(obj);
 
-    pin_function(sda, 1);
-    pin_mode(sda, PullNone);
-    pin_function(scl, 1);
-    pin_mode(scl, PullNone);
+    __IO uint32_t *regSDA = (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5);
+    __IO uint32_t *regSCL = (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4);
 
+    *regSDA = ((*regSDA & ~0x7) | 0x1) & ~(0x3 << 3) & ~(0x1 << 10);
+    *regSCL = ((*regSCL & ~0x7) | 0x1) & ~(0x3 << 3) & ~(0x1 << 10);
 }
 
 inline int i2c_start(i2c_t *obj) {

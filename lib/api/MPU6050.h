@@ -399,7 +399,7 @@ THE SOFTWARE.
 
 class MPU6050 {
     public:
-        MPU6050(PinName sda, PinName scl);
+        MPU6050();
 
         void getAcceleration(int16_t* x, int16_t* y, int16_t* z);
 

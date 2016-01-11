@@ -59,7 +59,7 @@ extern "C" {
  *  @param sda  The sda pin
  *  @param scl  The scl pin
  */
-void i2c_init(i2c_t *obj, PinName sda, PinName scl);
+void i2c_init(i2c_t *obj);
 
 /** Send START command.
  *  @param obj The i2c object

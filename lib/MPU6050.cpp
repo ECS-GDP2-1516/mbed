@@ -40,8 +40,8 @@ THE SOFTWARE.
 /** Default constructor, uses default I2C address.
  * @see MPU6050_DEFAULT_ADDRESS
  */
-MPU6050::MPU6050(PinName sda, PinName scl) : _i2c() {
-    i2c_init(&_i2c, sda, scl);
+MPU6050::MPU6050() : _i2c() {
+    i2c_init(&_i2c);
 
     writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x01);
     writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
