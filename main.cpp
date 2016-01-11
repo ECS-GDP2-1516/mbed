@@ -1,6 +1,9 @@
-#include "mbed.h"
 #include "MPU6050.h"
 #include "classify.h"
+#include "DigitalOut.h"
+
+using namespace mbed;
+using namespace std;
 
 // The offsets of the gyro
 #define Gx_offset -1.50

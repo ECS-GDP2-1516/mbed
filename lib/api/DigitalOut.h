@@ -16,16 +16,14 @@
 #ifndef MBED_DIGITALOUT_H
 #define MBED_DIGITALOUT_H
 
-#include "device.h"
 #include "PinNames.h"
-#include "PeripheralNames.h"
 
 #include <cstddef>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include "gpio_api.h"
-#include "pinmap.h"
+#include "PinNames.h"
 
 namespace mbed {
 

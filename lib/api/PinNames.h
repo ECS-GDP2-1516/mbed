@@ -188,6 +188,9 @@ typedef enum {
     PullDefault = PullDown
 } PinMode;
 
+#define LPC_IOCON0_BASE (LPC_IOCON_BASE)
+#define LPC_IOCON1_BASE (LPC_IOCON_BASE + 0x60)
+
 #ifdef __cplusplus
 }
 #endif

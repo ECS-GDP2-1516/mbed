@@ -16,7 +16,6 @@
 #ifndef MBED_I2C_API_H
 #define MBED_I2C_API_H
 
-#include "device.h"
 #include "PinNames.h"
 
 /**
@@ -37,22 +36,18 @@
 
 /** Non-asynch i2c hal structure
  */
-typedef struct i2c_s i2c_t;
+typedef struct i2c_s {
+    LPC_I2C_Type *i2c;
+} i2c_t;
 
 enum {
   I2C_ERROR_NO_SLAVE = -1,
   I2C_ERROR_BUS_BUSY = -2
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**@}*/
-
-#ifdef __cplusplus
-}
-#endif
+typedef enum {
+    I2C_0 = (int)LPC_I2C_BASE
+} I2CName;
 
 #define I2C_CONSET(x)       (x->i2c->CONSET)
 #define I2C_CONCLR(x)       (x->i2c->CONCLR)

@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "device.h"
 #include "PinNames.h"
-#include "PeripheralNames.h"
 #include <cstddef>
 #include <cstdio>
 #include "toolchain.h"

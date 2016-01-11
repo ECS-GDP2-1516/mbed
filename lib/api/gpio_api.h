@@ -16,8 +16,7 @@
 #ifndef MBED_GPIO_API_H
 #define MBED_GPIO_API_H
 
-#include "device.h"
-#include "pinmap.h"
+#include "PinNames.h"
 
 #ifdef __cplusplus
 extern "C" {
