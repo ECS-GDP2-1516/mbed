@@ -34,86 +34,67 @@
 
 /**@}*/
 
-/** Non-asynch i2c hal structure
- */
-typedef struct i2c_s {
-    LPC_I2C_Type *i2c;
-} i2c_t;
-
 enum {
   I2C_ERROR_NO_SLAVE = -1,
   I2C_ERROR_BUS_BUSY = -2
 };
 
-typedef enum {
-    I2C_0 = (int)LPC_I2C_BASE
-} I2CName;
-
-#define I2C_CONSET(x)       (x->i2c->CONSET)
-#define I2C_CONCLR(x)       (x->i2c->CONCLR)
-#define I2C_STAT(x)         (x->i2c->STAT)
-#define I2C_DAT(x)          (x->i2c->DAT)
-#define I2C_SCLL(x, val)    (x->i2c->SCLL = val)
-#define I2C_SCLH(x, val)    (x->i2c->SCLH = val)
-
-static inline void i2c_conclr(i2c_t *obj, int start, int stop, int interrupt, int acknowledge) {
-    I2C_CONCLR(obj) = (start << 5)
+static inline void i2c_conclr(int start, int stop, int interrupt, int acknowledge) {
+    LPC_I2C->CONCLR = (start << 5)
                     | (stop << 4)
                     | (interrupt << 3)
                     | (acknowledge << 2);
 }
 
-static inline void i2c_conset(i2c_t *obj, int start, int stop, int interrupt, int acknowledge) {
-    I2C_CONSET(obj) = (start << 5)
+static inline void i2c_conset(int start, int stop, int interrupt, int acknowledge) {
+    LPC_I2C->CONSET = (start << 5)
                     | (stop << 4)
                     | (interrupt << 3)
                     | (acknowledge << 2);
 }
 
 // Clear the Serial Interrupt (SI)
-static inline void i2c_clear_SI(i2c_t *obj) {
-    i2c_conclr(obj, 0, 0, 1, 0);
+static inline void i2c_clear_SI() {
+    i2c_conclr(0, 0, 1, 0);
 }
 
-static inline int i2c_status(i2c_t *obj) {
-    return I2C_STAT(obj);
+static inline int i2c_status() {
+    return LPC_I2C->STAT;
 }
 
 // Wait until the Serial Interrupt (SI) is set
-static int i2c_wait_SI(i2c_t *obj) {
+static int i2c_wait_SI() {
     int timeout = 0;
-    while (!(I2C_CONSET(obj) & (1 << 3))) {
+    while (!(LPC_I2C->CONSET & (1 << 3))) {
         timeout++;
         if (timeout > 100000) return -1;
     }
     return 0;
 }
 
-static inline void i2c_interface_enable(i2c_t *obj) {
-    I2C_CONSET(obj) = 0x40;
+static inline void i2c_interface_enable() {
+    LPC_I2C->CONSET = 0x40;
 }
 
-static inline void i2c_power_enable(i2c_t *obj) {
+static inline void i2c_power_enable() {
     LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 5);
     LPC_SYSCON->PRESETCTRL |= 1 << 1;
 }
 
-static inline void i2c_init(i2c_t *obj) {
+static inline void i2c_init() {
     // determine the SPI to use
-
-    obj->i2c = (LPC_I2C_Type *)I2C_0;
     
     // enable power
-    i2c_power_enable(obj);
+    i2c_power_enable();
     
     // set default frequency at 100k
     uint32_t PCLK = SystemCoreClock;
     uint32_t pulse = PCLK / (200000);
-    I2C_SCLL(obj, pulse);
-    I2C_SCLH(obj, pulse);
+    LPC_I2C->SCLL = pulse;
+    LPC_I2C->SCLH = pulse;
 
-    i2c_conclr(obj, 1, 1, 1, 1);
-    i2c_interface_enable(obj);
+    i2c_conclr(1, 1, 1, 1);
+    i2c_interface_enable();
 
     __IO uint32_t *regSDA = (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5);
     __IO uint32_t *regSCL = (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4);
@@ -122,35 +103,35 @@ static inline void i2c_init(i2c_t *obj) {
     *regSCL = ((*regSCL & ~0x7) | 0x1) & ~(0x3 << 3) & ~(0x1 << 10);
 }
 
-static inline int i2c_start(i2c_t *obj) {
+static inline int i2c_start() {
     int status = 0;
     // 8.1 Before master mode can be entered, I2CON must be initialised to:
     //  - I2EN STA STO SI AA - -
     //  -  1    0   0   0  x - -
     // if AA = 0, it can't enter slave mode
-    i2c_conclr(obj, 1, 1, 1, 1);
+    i2c_conclr(1, 1, 1, 1);
     
     // The master mode may now be entered by setting the STA bit
     // this will generate a start condition when the bus becomes free
-    i2c_conset(obj, 1, 0, 0, 1);
+    i2c_conset(1, 0, 0, 1);
     
-    i2c_wait_SI(obj);
-    status = i2c_status(obj);
+    i2c_wait_SI();
+    status = i2c_status();
     
     // Clear start bit now transmitted, and interrupt bit
-    i2c_conclr(obj, 1, 0, 0, 0);
+    i2c_conclr(1, 0, 0, 0);
     return status;
 }
 
-static inline int i2c_stop(i2c_t *obj) {
+static inline int i2c_stop() {
     int timeout = 0;
 
     // write the stop bit
-    i2c_conset(obj, 0, 1, 0, 0);
-    i2c_clear_SI(obj);
+    i2c_conset(0, 1, 0, 0);
+    i2c_clear_SI();
     
     // wait for STO bit to reset
-    while(I2C_CONSET(obj) & (1 << 4)) {
+    while(LPC_I2C->CONSET & (1 << 4)) {
         timeout ++;
         if (timeout > 100000) return 1;
     }
@@ -158,34 +139,34 @@ static inline int i2c_stop(i2c_t *obj) {
     return 0;
 }
 
-static inline int i2c_do_write(i2c_t *obj, int value, uint8_t addr) {
+static inline int i2c_do_write(int value, uint8_t addr) {
     // write the data
-    I2C_DAT(obj) = value;
+    LPC_I2C->DAT = value;
     
     // clear SI to init a send
-    i2c_clear_SI(obj);
+    i2c_clear_SI();
     
     // wait and return status
-    i2c_wait_SI(obj);
-    return i2c_status(obj);
+    i2c_wait_SI();
+    return i2c_status();
 }
 
-static inline int i2c_do_read(i2c_t *obj, int last) {
+static inline int i2c_do_read(int last) {
     // we are in state 0x40 (SLA+R tx'd) or 0x50 (data rx'd and ack)
     if (last) {
-        i2c_conclr(obj, 0, 0, 0, 1); // send a NOT ACK
+        i2c_conclr(0, 0, 0, 1); // send a NOT ACK
     } else {
-        i2c_conset(obj, 0, 0, 0, 1); // send a ACK
+        i2c_conset(0, 0, 0, 1); // send a ACK
     }
     
     // accept byte
-    i2c_clear_SI(obj);
+    i2c_clear_SI();
     
     // wait for it to arrive
-    i2c_wait_SI(obj);
+    i2c_wait_SI();
     
     // return the data
-    return (I2C_DAT(obj) & 0xFF);
+    return (LPC_I2C->DAT & 0xFF);
 }
 
 // The I2C does a read or a write as a whole operation
@@ -202,68 +183,68 @@ static inline int i2c_do_read(i2c_t *obj, int last) {
 // because something is setup wrong (e.g. wiring), and we don't need to programatically
 // check for that
 
-static inline int i2c_read(i2c_t *obj, char *data, int length) {
+static inline int i2c_read(char *data, int length) {
     int count, status;
     
-    status = i2c_start(obj);
+    status = i2c_start();
     
     if ((status != 0x10) && (status != 0x08)) {
-        i2c_stop(obj);
+        i2c_stop();
         return I2C_ERROR_BUS_BUSY;
     }
     
-    status = i2c_do_write(obj, READ_ADDR, 1);
+    status = i2c_do_write(READ_ADDR, 1);
     if (status != 0x40) {
-        i2c_stop(obj);
+        i2c_stop();
         return I2C_ERROR_NO_SLAVE;
     }
 
     // Read in all except last byte
     for (count = 0; count < (length - 1); count++) {
-        int value = i2c_do_read(obj, 0);
-        status = i2c_status(obj);
+        int value = i2c_do_read(0);
+        status = i2c_status();
         if (status != 0x50) {
-            i2c_stop(obj);
+            i2c_stop();
             return count;
         }
         data[count] = (char) value;
     }
 
     // read in last byte
-    int value = i2c_do_read(obj, 1);
-    status = i2c_status(obj);
+    int value = i2c_do_read(1);
+    status = i2c_status();
     if (status != 0x58) {
-        i2c_stop(obj);
+        i2c_stop();
         return length - 1;
     }
     
     data[count] = (char) value;
     
-    i2c_stop(obj);
+    i2c_stop();
     
     return length;
 }
 
-int i2c_write(i2c_t *obj, const char *data, int length) {
+int i2c_write(const char *data, int length) {
     int i, status;
     
-    status = i2c_start(obj);
+    status = i2c_start();
     
     if ((status != 0x10) && (status != 0x08)) {
-        i2c_stop(obj);
+        i2c_stop();
         return I2C_ERROR_BUS_BUSY;
     }
     
-    status = i2c_do_write(obj, WRITE_ADDR, 1);
+    status = i2c_do_write(WRITE_ADDR, 1);
     if (status != 0x18) {
-        i2c_stop(obj);
+        i2c_stop();
         return I2C_ERROR_NO_SLAVE;
     }
     
     for (i=0; i<length; i++) {
-        status = i2c_do_write(obj, data[i], 0);
+        status = i2c_do_write(data[i], 0);
         if(status != 0x28) {
-            i2c_stop(obj);
+            i2c_stop();
             return i;
         }
     }
@@ -272,13 +253,13 @@ int i2c_write(i2c_t *obj, const char *data, int length) {
     // see also issue report https://mbed.org/users/mbed_official/code/mbed/issues/1
     // i2c_clear_SI(obj);
     
-    i2c_stop(obj);
+    i2c_stop();
     
     return length;
 }
 
-int i2c_byte_write(i2c_t *obj, int data) {
-    i2c_do_write(obj, (data & 0xFF), 0);
+int i2c_byte_write(int data) {
+    i2c_do_write((data & 0xFF), 0);
 
     return 0;
 }

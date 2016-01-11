@@ -397,14 +397,12 @@ THE SOFTWARE.
 
 // note: DMP code memory blocks defined at end of header file
 
-i2c_t _i2c;
-
 int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
-    int written = i2c_write(&_i2c, (const char *)&regAddr, 1);
+    int written = i2c_write((const char *)&regAddr, 1);
     if(length != written)
         return -1;
 
-    int read = i2c_read(&_i2c, (char *)data, length);
+    int read = i2c_read((char *)data, length);
 
     return length != read;
 }
@@ -413,7 +411,7 @@ void writeBytes(uint8_t regAddr, uint8_t *data) {
     uint8_t send[2];
     send[0] = regAddr;
     send[1] = data[0];
-    i2c_write(&_i2c, (const char *)send, 2);
+    i2c_write((const char *)send, 2);
 }
 
 void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data) {
@@ -429,7 +427,7 @@ void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data) {
 
 static inline void init()
 {
-    i2c_init(&_i2c);
+    i2c_init();
 
     writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x01);
     writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
