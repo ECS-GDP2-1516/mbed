@@ -178,7 +178,7 @@ static inline int i2c_do_read(i2c_t *obj, int last) {
 // because something is setup wrong (e.g. wiring), and we don't need to programatically
 // check for that
 
-int i2c_read(i2c_t *obj, int address, char *data, int length) {
+int i2c_read(i2c_t *obj, char *data, int length) {
     int count, status;
     
     status = i2c_start(obj);
@@ -188,7 +188,7 @@ int i2c_read(i2c_t *obj, int address, char *data, int length) {
         return I2C_ERROR_BUS_BUSY;
     }
     
-    status = i2c_do_write(obj, (address | 0x01), 1);
+    status = i2c_do_write(obj, READ_ADDR, 1);
     if (status != 0x40) {
         i2c_stop(obj);
         return I2C_ERROR_NO_SLAVE;
@@ -220,7 +220,7 @@ int i2c_read(i2c_t *obj, int address, char *data, int length) {
     return length;
 }
 
-int i2c_write(i2c_t *obj, int address, const char *data, int length) {
+int i2c_write(i2c_t *obj, const char *data, int length) {
     int i, status;
     
     status = i2c_start(obj);
@@ -230,7 +230,7 @@ int i2c_write(i2c_t *obj, int address, const char *data, int length) {
         return I2C_ERROR_BUS_BUSY;
     }
     
-    status = i2c_do_write(obj, (address & 0xFE), 1);
+    status = i2c_do_write(obj, WRITE_ADDR, 1);
     if (status != 0x18) {
         i2c_stop(obj);
         return I2C_ERROR_NO_SLAVE;

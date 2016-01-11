@@ -30,6 +30,9 @@
 #define I2C_EVENT_TRANSFER_EARLY_NACK (1 << 4)
 #define I2C_EVENT_ALL                 (I2C_EVENT_ERROR |  I2C_EVENT_TRANSFER_COMPLETE | I2C_EVENT_ERROR_NO_SLAVE | I2C_EVENT_TRANSFER_EARLY_NACK)
 
+#define WRITE_ADDR (211 & 0xFE)
+#define READ_ADDR (211 | 0x01)
+
 /**@}*/
 
 /** Non-asynch i2c hal structure
@@ -76,7 +79,7 @@ int  i2c_stop(i2c_t *obj);
  *  @param stop    Stop to be generated after the transfer is done
  *  @return Number of read bytes
  */
-int  i2c_read(i2c_t *obj, int address, char *data, int length);
+int  i2c_read(i2c_t *obj, char *data, int length);
 
 /** Blocking sending data.
  *  @param obj     The i2c object
@@ -86,7 +89,7 @@ int  i2c_read(i2c_t *obj, int address, char *data, int length);
  *  @param stop    Stop to be generated after the transfer is done
  *  @return Number of written bytes
  */
-int  i2c_write(i2c_t *obj, int address, const char *data, int length);
+int  i2c_write(i2c_t *obj, const char *data, int length);
 
 /** Read one byte.
  *  @param obj The i2c object

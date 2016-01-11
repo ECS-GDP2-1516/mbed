@@ -100,7 +100,7 @@ int8_t MPU6050::readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     if(write((const char *)&regAddr, 1))
         return -1;
 
-    int read = i2c_read(&_i2c, MPU6050_DEFAULT_ADDRESS, (char *)data, length);
+    int read = i2c_read(&_i2c, (char *)data, length);
 
     return length != read;
 }
@@ -127,7 +127,7 @@ void MPU6050::writeBytes(uint8_t regAddr, uint8_t *data) {
 
 // write - Master Transmitter Mode
 int MPU6050::write(const char* data, int length) {
-    int written = i2c_write(&_i2c, MPU6050_DEFAULT_ADDRESS, data, length);
+    int written = i2c_write(&_i2c, data, length);
 
     return length != written;
 }
