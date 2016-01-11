@@ -184,7 +184,7 @@ void i2c_frequency(i2c_t *obj, int hz) {
 // because something is setup wrong (e.g. wiring), and we don't need to programatically
 // check for that
 
-int i2c_read(i2c_t *obj, int address, char *data, int length, int stop) {
+int i2c_read(i2c_t *obj, int address, char *data, int length) {
     int count, status;
     
     status = i2c_start(obj);
@@ -221,15 +221,12 @@ int i2c_read(i2c_t *obj, int address, char *data, int length, int stop) {
     
     data[count] = (char) value;
     
-    // If not repeated start, send stop.
-    if (stop) {
-        i2c_stop(obj);
-    }
+    i2c_stop(obj);
     
     return length;
 }
 
-int i2c_write(i2c_t *obj, int address, const char *data, int length, int stop) {
+int i2c_write(i2c_t *obj, int address, const char *data, int length) {
     int i, status;
     
     status = i2c_start(obj);
@@ -257,10 +254,7 @@ int i2c_write(i2c_t *obj, int address, const char *data, int length, int stop) {
     // see also issue report https://mbed.org/users/mbed_official/code/mbed/issues/1
     // i2c_clear_SI(obj);
     
-    // If not repeated start, send stop.
-    if (stop) {
-        i2c_stop(obj);
-    }
+    i2c_stop(obj);
     
     return length;
 }
