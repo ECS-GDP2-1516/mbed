@@ -1,9 +1,12 @@
 #include "MPU6050.h"
 #include "classify.h"
 #include "DigitalOut.h"
+#include "heuristic.h"
+
 
 using namespace mbed;
 using namespace std;
+
 
 // The offsets of the gyro
 #define Gx_offset -1.50
@@ -71,12 +74,17 @@ int main() {
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
     }
+
     myled2 = 1;
+    
+    //initiate the heuristic before classifying
+    init_heur();
+
     //now we continue to read values and classify them
     while(1) {
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
 
-        myled = classify(rear, buffer);
+        myled = heur_classify(classify(rear, buffer));
     }
 }
