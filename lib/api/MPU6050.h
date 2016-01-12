@@ -435,12 +435,12 @@ static inline void init()
 }
 
 static inline void getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
-    uint8_t buffer[6];
-    readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, buffer);
+    uint16_t buffer[3];
+    readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, (uint8_t*)buffer);
 
-    *x = (((int16_t)buffer[0]) << 8) | buffer[1];
-    *y = (((int16_t)buffer[2]) << 8) | buffer[3];
-    *z = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *x = buffer[0];
+    *y = buffer[1];
+    *z = buffer[2];
 }
 
 #endif /* _MPU6050_H_ */
