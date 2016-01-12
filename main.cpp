@@ -21,7 +21,7 @@ DigitalOut myled3(LED4);
 int16_t ax, ay, az;
 
 int8_t rear = -1;
-int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
+int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
 
 /*
  * Watchdog control WDTOSCCTRL options
@@ -44,14 +44,6 @@ int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
  * 0xE 4.4    MHz
  * 0xF 4.6    MHz
  */
- 
-// inserts the next set of values read from the sensor into the buffer
-void insert_reading(int b[], int x, int y, int z) {
-    rear=(rear+3)%BUFFER_SIZE;
-    b[rear-2]=x;
-    b[rear-1]=y;
-    b[rear]=z;
-}
 
 int main() {
     LPC_SYSCON->WDTOSCCTRL = (0x1 << 5) | 0x5;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
@@ -77,15 +69,14 @@ int main() {
     
     //first, fill up the buffer with values
     for(count=0; count<BUFFER_SIZE/3; count++) {
-        getAcceleration(&ax, &ay, &az);
-        insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
+        rear = (rear + 3) % BUFFER_SIZE;
+        getAcceleration(&buffer[rear - 2]);
     }
     myled2 = 1;
     //now we continue to read values and classify them
     while(1) {
-        getAcceleration(&ax, &ay, &az);
-
-        insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
+        rear = (rear + 3) % BUFFER_SIZE;
+        getAcceleration(&buffer[rear - 2]);
 
         myled = classify(rear, buffer);
     }

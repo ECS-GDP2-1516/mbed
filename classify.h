@@ -3,7 +3,9 @@
 
 #define BUFFER_SIZE 30
 
-int classify(int rear, int buffer[]);
+#include <stdint.h>
+
+int classify(int8_t rear, int16_t buffer[]);
 
 void sigmoid(int* var);
 
