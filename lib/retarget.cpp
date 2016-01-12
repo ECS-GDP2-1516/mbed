@@ -37,7 +37,6 @@ extern "C" int __wrap_main(void) {
 // Provide implementation of _sbrk (low-level dynamic memory allocation
 // routine) for GCC_ARM which compares new heap pointer with MSP instead of
 // SP.  This make it compatible with RTX RTOS thread stacks.
-#if defined(TOOLCHAIN_GCC_ARM)
 // Linker defined symbol used by _sbrk to indicate where heap should start.
 extern "C" int __end__;
 
@@ -59,9 +58,5 @@ extern "C" caddr_t _sbrk(int incr) {
     heap = new_heap;
     return (caddr_t) prev_heap;
 }
-#endif
 
-#if !defined(TOOLCHAIN_GCC_ARM) && !defined(TOOLCHAIN_GCC_CW)
-} //namespace std
-#endif
 

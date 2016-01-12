@@ -19,18 +19,11 @@ SIZE    = $(GCC_BIN)arm-none-eabi-size
 
 CPU = -mcpu=cortex-m0 -mthumb 
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
-CC_SYMBOLS = -DTOOLCHAIN_GCC_ARM 
+CC_SYMBOLS = -Os
 
 LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=$(PROJECT).map,--cref
-#LD_FLAGS += -u _printf_float -u _scanf_float
 LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
-
-ifeq ($(DEBUG), 1)
-  CC_FLAGS += -DDEBUG -O0
-else
-  CC_FLAGS += -DNDEBUG -Os
-endif
 
 .PHONY: all clean lst size
 
@@ -45,7 +38,7 @@ clean:
 	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
 
 .c.o:
-	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDE_PATHS) -o $@ $<
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99 $(INCLUDE_PATHS) -o $@ $<
 
 .cpp.o:
 	$(CPP) $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu++98 -fno-rtti $(INCLUDE_PATHS) -o $@ $<
@@ -53,7 +46,7 @@ clean:
 
 
 
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS)
+$(PROJECT).elf: $(OBJECTS)
 	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) -o $@ $^ $(LD_SYS_LIBS)
 
 	@echo ""
