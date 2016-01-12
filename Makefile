@@ -19,7 +19,7 @@ SIZE    = $(GCC_BIN)arm-none-eabi-size
 
 CPU = -mcpu=cortex-m0 -mthumb 
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
-CC_SYMBOLS = -D__CORTEX_M0 -DTARGET_LPC11UXX -DTOOLCHAIN_GCC -DTARGET_LPC11U24_401 -DTARGET_CORTEX_M -DTARGET_NXP -DTOOLCHAIN_GCC_ARM -DTARGET_M0 -DARM_MATH_CM0 -DMBED_BUILD_TIMESTAMP=1447257386.83 -DTARGET_LPC11U24 -D__MBED__=1 
+CC_SYMBOLS = -DTOOLCHAIN_GCC_ARM 
 
 LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=$(PROJECT).map,--cref
 #LD_FLAGS += -u _printf_float -u _scanf_float
