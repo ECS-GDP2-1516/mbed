@@ -47,10 +47,6 @@ static inline void gpio_write(gpio_t *obj, int value) {
         LPC_GPIO->CLR[1] = obj->mask;
 }
 
-static inline int gpio_read(gpio_t *obj) {
-    return ((LPC_GPIO->PIN[1] & obj->mask) ? 1 : 0);
-}
-
 #ifdef __cplusplus
 }
 #endif
