@@ -17,7 +17,7 @@ OBJDUMP = $(GCC_BIN)arm-none-eabi-objdump
 SIZE    = $(GCC_BIN)arm-none-eabi-size 
 
 
-CPU = -mcpu=cortex-m0 -mthumb 
+CPU = -mcpu=cortex-m0 -mthumb
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
 CC_SYMBOLS = -Os
 
