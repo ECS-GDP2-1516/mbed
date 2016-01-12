@@ -54,9 +54,9 @@ public:
     DigitalOut(PinName pin) : gpio() {
         gpio_init(&gpio, pin);
         gpio_write(&gpio, 0);
-        *gpio.reg_dir |= gpio.mask;
+        LPC_GPIO->DIR[1] |= gpio.mask;
 
-        uint32_t pin_number = (uint32_t)gpio.pin;
+        uint32_t pin_number = (uint32_t)pin;
         __IO uint32_t *reg = (__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (pin_number - 32));
         
         uint32_t tmp = *reg;
