@@ -18,7 +18,6 @@ using namespace std;
 DigitalOut myled(LED2);
 DigitalOut myled2(LED3);
 DigitalOut myled3(LED4);
-int16_t ax, ay, az;
 
 int8_t rear = -1;
 int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
