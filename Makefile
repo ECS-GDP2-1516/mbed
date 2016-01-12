@@ -6,6 +6,7 @@ PROJECT = mbed_blinky
 OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./classify.o ./lib/retarget.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./LPC11U24.ld
+MBED_DIR = /media/mohit/MBED
 
 ############################################################################### 
 AS      = $(GCC_BIN)arm-none-eabi-as
@@ -25,7 +26,7 @@ LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=
 LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
 
-.PHONY: all clean lst size
+.PHONY: all clean lst size deploy
 
 all: $(PROJECT).bin $(PROJECT).hex size
 
@@ -33,6 +34,7 @@ all: $(PROJECT).bin $(PROJECT).hex size
 clean:
 	rm -f $(PROJECT).bin $(PROJECT).elf $(PROJECT).hex $(PROJECT).map $(PROJECT).lst $(OBJECTS) $(DEPS)
 
+deploy: $(MBED_DIR)/$(PROJECT).bin
 
 .S.o:
 	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
@@ -44,8 +46,6 @@ clean:
 	$(CPP) $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu++98 -fno-rtti $(INCLUDE_PATHS) -o $@ $<
 
 
-
-
 $(PROJECT).elf: $(OBJECTS)
 	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) -o $@ $^ $(LD_SYS_LIBS)
 
@@ -55,6 +55,8 @@ $(PROJECT).elf: $(OBJECTS)
 	@echo "*****"
 	@echo ""
 
+$(MBED_DIR)/$(PROJECT).bin: $(PROJECT).bin
+	cp $< $@
 
 $(PROJECT).bin: $(PROJECT).elf
 	$(OBJCOPY) -O binary $< $@
