@@ -1,6 +1,8 @@
 #ifndef _HEURISTIC_H_
 #define _HEURISTIC_H_
 
+#include <stdint.h>
+
 #define HEUR_SIZE 10
 #define PEAK 0
 #define TROU 1
@@ -8,6 +10,6 @@
 
 void init_heur();
 
-int heur_classify(int value);
+bool heur_classify(uint8_t value);
 
 #endif

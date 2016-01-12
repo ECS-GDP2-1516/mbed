@@ -5,8 +5,8 @@
 
 #include <stdint.h>
 
-int classify(int8_t rear, int16_t buffer[]);
+uint8_t classify(int8_t rear, int16_t buffer[]);
 
-void sigmoid(int* var);
+void sigmoid(int32_t* var);
 
 #endif

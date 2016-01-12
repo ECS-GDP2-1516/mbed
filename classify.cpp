@@ -8,12 +8,12 @@ const int32_t W[71] = {779,-302,-5398,-994,-3456,-7674,-3501,8029,7970,9422,-814
 -1993,36688,-45645,
 };
 
-int classify(int8_t rear, int16_t buffer[])
+uint8_t classify(int8_t rear, int16_t buffer[])
 {
-    int* offset=(int*)W;
+    int32_t* offset=(int32_t*)W;
     
-    int nodeA = *offset++;
-    int j     = rear;
+    int32_t nodeA = *offset++;
+    int8_t j     = rear;
     while (1)
     {
         j      = (j + 1) % BUFFER_SIZE;
@@ -26,8 +26,8 @@ int classify(int8_t rear, int16_t buffer[])
     }
     sigmoid(&nodeA);
 
-    int nodeB = *offset++;
-    j         = rear;
+    int32_t nodeB = *offset++;
+    j             = rear;
     while (1)
     {
         j      = (j + 1) % BUFFER_SIZE;
@@ -40,9 +40,9 @@ int classify(int8_t rear, int16_t buffer[])
     }
     sigmoid(&nodeB);
 
-    int v[3];
+    int32_t v[3];
 
-    for (int* i = v; i < v + 3; i++)
+    for (int32_t* i = v; i < v + 3; i++)
     {
         *i  = *offset++;
         *i += (*offset++ * nodeA) >> 12;
@@ -65,7 +65,7 @@ int classify(int8_t rear, int16_t buffer[])
     }
 }
 
-void sigmoid(int* var)
+void sigmoid(int32_t* var)
 {
     if (*var < -5 << 12)
     {
