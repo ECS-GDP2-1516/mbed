@@ -46,13 +46,11 @@ static inline void gpio_init(gpio_t *obj, PinName pin) {
     obj->pin = pin;
 
     obj->mask = gpio_set(pin);
-    
-    unsigned int port = (unsigned int)pin >> PORT_SHIFT;
-    
-    obj->reg_set = &LPC_GPIO->SET[port];
-    obj->reg_clr = &LPC_GPIO->CLR[port];
-    obj->reg_in  = &LPC_GPIO->PIN[port];
-    obj->reg_dir = &LPC_GPIO->DIR[port];
+        
+    obj->reg_set = &LPC_GPIO->SET[1];
+    obj->reg_clr = &LPC_GPIO->CLR[1];
+    obj->reg_in  = &LPC_GPIO->PIN[1];
+    obj->reg_dir = &LPC_GPIO->DIR[1];
 }
 
 static inline void gpio_write(gpio_t *obj, int value) {
