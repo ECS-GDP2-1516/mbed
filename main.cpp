@@ -1,7 +1,12 @@
-#include "mbed.h"
-#include "I2Cdev.h"
 #include "MPU6050.h"
 #include "classify.h"
+#include "DigitalOut.h"
+#include "heuristic.h"
+
+
+using namespace mbed;
+using namespace std;
+
 
 // The offsets of the gyro
 #define Gx_offset -1.50
@@ -12,16 +17,13 @@
 #define Ay_offset 0.02
 #define Az_offset 0.14
 
-MPU6050 accelgyro;
-
 //Serial serial(p9, p10);
 DigitalOut myled(LED2);
 DigitalOut myled2(LED3);
 DigitalOut myled3(LED4);
-int16_t ax, ay, az;
 
 int8_t rear = -1;
-int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
+int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
 
 /*
  * Watchdog control WDTOSCCTRL options
@@ -44,14 +46,6 @@ int buffer[BUFFER_SIZE]; //the buffer is just used to read values into
  * 0xE 4.4    MHz
  * 0xF 4.6    MHz
  */
- 
-// inserts the next set of values read from the sensor into the buffer
-void insert_reading(int b[], int x, int y, int z) {
-    rear=(rear+3)%BUFFER_SIZE;
-    b[rear-2]=x;
-    b[rear-1]=y;
-    b[rear]=z;
-}
 
 int main() {
     LPC_SYSCON->WDTOSCCTRL = (0x1 << 5) | 0x5;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
@@ -63,9 +57,8 @@ int main() {
     while (!(LPC_SYSCON->MAINCLKUEN & 0x01));    // Waits for changes to complete
 
     //LPC_USART->ACR = 0x7;
+    init();
 
-    //serial.printf("Initializing I2C device.....\n");
-    accelgyro.initialize();
     //serial.printf("Testing device connections....\n");
     //serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
     myled3 = 1;
@@ -78,16 +71,20 @@ int main() {
     
     //first, fill up the buffer with values
     for(count=0; count<BUFFER_SIZE/3; count++) {
-        accelgyro.getAcceleration(&ax, &ay, &az);
-        insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
+        rear = (rear + 3) % BUFFER_SIZE;
+        getAcceleration(&buffer[rear - 2]);
     }
+
+    myled2 = 1;
+    
+    //initiate the heuristic before classifying
+    init_heur();
 
     //now we continue to read values and classify them
     while(1) {
-        accelgyro.getAcceleration(&ax, &ay, &az);
+        rear = (rear + 3) % BUFFER_SIZE;
+        getAcceleration(&buffer[rear - 2]);
 
-        insert_reading(buffer, ax >> 2, ay >> 2, az >> 2);
-
-        myled = classify(rear, buffer);
+        myled = heur_classify(classify(rear, buffer));
     }
 }

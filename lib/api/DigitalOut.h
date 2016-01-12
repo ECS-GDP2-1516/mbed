@@ -16,8 +16,14 @@
 #ifndef MBED_DIGITALOUT_H
 #define MBED_DIGITALOUT_H
 
-#include "platform.h"
+#include "PinNames.h"
+
+#include <cstddef>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include "gpio_api.h"
+#include "PinNames.h"
 
 namespace mbed {
 
@@ -46,16 +52,17 @@ public:
      *  @param pin DigitalOut pin to connect to
      */
     DigitalOut(PinName pin) : gpio() {
-        gpio_init_out(&gpio, pin);
-    }
+        gpio_init(&gpio, pin);
+        gpio_write(&gpio, 0);
+        *gpio.reg_dir |= gpio.mask;
 
-    /** Create a DigitalOut connected to the specified pin
-     *
-     *  @param pin DigitalOut pin to connect to
-     *  @param value the initial pin value
-     */
-    DigitalOut(PinName pin, int value) : gpio() {
-        gpio_init_out_ex(&gpio, pin, value);
+        uint32_t pin_number = (uint32_t)gpio.pin;
+        __IO uint32_t *reg = (__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (pin_number - 32));
+        
+        uint32_t tmp = *reg;
+        tmp &= ~(0x3 << 3);
+        tmp &= ~(0x1 << 10);
+        *reg = tmp;
     }
 
     /** Set the output, specified as 0 or 1 (int)
@@ -67,45 +74,12 @@ public:
         gpio_write(&gpio, value);
     }
 
-    /** Return the output setting, represented as 0 or 1 (int)
-     *
-     *  @returns
-     *    an integer representing the output setting of the pin,
-     *    0 for logical 0, 1 for logical 1
-     */
-    int read() {
-        return gpio_read(&gpio);
-    }
-
-    /** Return the output setting, represented as 0 or 1 (int)
-     *
-     *  @returns
-     *    Non zero value if pin is connected to uc GPIO
-     *    0 if gpio object was initialized with NC
-     */
-    int is_connected() {
-        return gpio_is_connected(&gpio);
-    }
-
-#ifdef MBED_OPERATORS
     /** A shorthand for write()
      */
     DigitalOut& operator= (int value) {
         write(value);
         return *this;
     }
-
-    DigitalOut& operator= (DigitalOut& rhs) {
-        write(rhs.read());
-        return *this;
-    }
-
-    /** A shorthand for read()
-     */
-    operator int() {
-        return read();
-    }
-#endif
 
 protected:
     gpio_t gpio;

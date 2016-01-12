@@ -3,7 +3,7 @@
 
 GCC_BIN = 
 PROJECT = mbed_blinky
-OBJECTS = ./lib/gpio.o ./lib/board.o ./lib/i2c_api.o ./lib/pinmap.o ./lib/serial_api.o ./lib/ticker_api.o ./lib/gpio_api.o ./lib/us_ticker.o ./lib/pinmap_common.o ./lib/us_ticker_api.o ./lib/mbed_interface.o ./lib/wait_api.o ./lib/semihost_api.o ./lib/system_LPC11Uxx.o ./lib/cmsis_nvic.o ./lib/PeripheralPins.o ./lib/I2C.o ./main.o ./classify.o ./lib/I2Cdev.o ./lib/MPU6050.o ./lib/retarget.o ./lib/startup_LPC11xx.o
+OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./classify.o ./lib/retarget.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./LPC11U24.ld
 
@@ -17,20 +17,13 @@ OBJDUMP = $(GCC_BIN)arm-none-eabi-objdump
 SIZE    = $(GCC_BIN)arm-none-eabi-size 
 
 
-CPU = -mcpu=cortex-m0 -mthumb 
+CPU = -mcpu=cortex-m0 -mthumb
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
-CC_SYMBOLS = -D__CORTEX_M0 -DTARGET_LPC11UXX -DTOOLCHAIN_GCC -DTARGET_LPC11U24_401 -DTARGET_CORTEX_M -DTARGET_NXP -DTOOLCHAIN_GCC_ARM -DTARGET_M0 -DARM_MATH_CM0 -DMBED_BUILD_TIMESTAMP=1447257386.83 -DTARGET_LPC11U24 -D__MBED__=1 
+CC_SYMBOLS = -Os
 
 LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=$(PROJECT).map,--cref
-#LD_FLAGS += -u _printf_float -u _scanf_float
 LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
-
-ifeq ($(DEBUG), 1)
-  CC_FLAGS += -DDEBUG -O0
-else
-  CC_FLAGS += -DNDEBUG -Os
-endif
 
 .PHONY: all clean lst size
 
@@ -45,7 +38,7 @@ clean:
 	$(CC) $(CPU) -c -x assembler-with-cpp -o $@ $<
 
 .c.o:
-	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99   $(INCLUDE_PATHS) -o $@ $<
+	$(CC)  $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu99 $(INCLUDE_PATHS) -o $@ $<
 
 .cpp.o:
 	$(CPP) $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu++98 -fno-rtti $(INCLUDE_PATHS) -o $@ $<
@@ -53,7 +46,7 @@ clean:
 
 
 
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS)
+$(PROJECT).elf: $(OBJECTS)
 	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) -o $@ $^ $(LD_SYS_LIBS)
 
 	@echo ""

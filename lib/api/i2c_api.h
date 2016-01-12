@@ -16,10 +16,7 @@
 #ifndef MBED_I2C_API_H
 #define MBED_I2C_API_H
 
-#include "device.h"
-#include "buffer.h"
-
-#if DEVICE_I2C
+#include "PinNames.h"
 
 /**
  * @defgroup I2CEvents I2C Events Macros
@@ -32,192 +29,237 @@
 #define I2C_EVENT_TRANSFER_EARLY_NACK (1 << 4)
 #define I2C_EVENT_ALL                 (I2C_EVENT_ERROR |  I2C_EVENT_TRANSFER_COMPLETE | I2C_EVENT_ERROR_NO_SLAVE | I2C_EVENT_TRANSFER_EARLY_NACK)
 
+#define WRITE_ADDR (211 & 0xFE)
+#define READ_ADDR (211 | 0x01)
+
 /**@}*/
-
-#if DEVICE_I2C_ASYNCH
-/** Asynch i2c hal structure
- */
-typedef struct {
-    struct i2c_s    i2c;     /**< Target specific i2c structure */
-    struct buffer_s tx_buff; /**< Tx buffer */
-    struct buffer_s rx_buff; /**< Rx buffer */
-} i2c_t;
-
-#else
-/** Non-asynch i2c hal structure
- */
-typedef struct i2c_s i2c_t;
-
-#endif
 
 enum {
   I2C_ERROR_NO_SLAVE = -1,
   I2C_ERROR_BUS_BUSY = -2
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \defgroup GeneralI2C I2C Configuration Functions
- * @{
- */
-
-/** Initialize the I2C peripheral. It sets the default parameters for I2C
- *  peripheral, and configure its specifieds pins.
- *  @param obj  The i2c object
- *  @param sda  The sda pin
- *  @param scl  The scl pin
- */
-void i2c_init(i2c_t *obj, PinName sda, PinName scl);
-
-/** Configure the I2C frequency.
- *  @param obj The i2c object
- *  @param hz  Frequency in Hz
- */
-void i2c_frequency(i2c_t *obj, int hz);
-
-/** Send START command.
- *  @param obj The i2c object
- */
-int  i2c_start(i2c_t *obj);
-
-/** Send STOP command.
- *  @param obj The i2c object
- */
-int  i2c_stop(i2c_t *obj);
-
-/** Blocking reading data.
- *  @param obj     The i2c object
- *  @param address 7-bit address (last bit is 1)
- *  @param data    The buffer for receiving
- *  @param length  Number of bytes to read
- *  @param stop    Stop to be generated after the transfer is done
- *  @return Number of read bytes
- */
-int  i2c_read(i2c_t *obj, int address, char *data, int length, int stop);
-
-/** Blocking sending data.
- *  @param obj     The i2c object
- *  @param address 7-bit address (last bit is 0)
- *  @param data    The buffer for sending
- *  @param length  Number of bytes to wrte
- *  @param stop    Stop to be generated after the transfer is done
- *  @return Number of written bytes
- */
-int  i2c_write(i2c_t *obj, int address, const char *data, int length, int stop);
-
-/** Reset I2C peripheral. TODO: The action here. Most of the implementation sends stop().
- *  @param obj The i2c object
- */
-void i2c_reset(i2c_t *obj);
-
-/** Read one byte.
- *  @param obj The i2c object
- *  @param last Acknoledge
- *  @return The read byte
- */
-int  i2c_byte_read(i2c_t *obj, int last);
-
-/** Write one byte.
- *  @param obj The i2c object
- *  @param data Byte to be written
- *  @return 1 if NAK was received, 0 if ACK was received, 2 for timeout.
- */
-int  i2c_byte_write(i2c_t *obj, int data);
-
-/**@}*/
-
-#if DEVICE_I2CSLAVE
-
-/**
- * \defgroup SynchI2C Synchronous I2C Hardware Abstraction Layer for slave
- * @{
- */
-
-/** Configure I2C as slave or master.
- *  @param obj The I2C object
- *  @return non-zero if a value is available
- */
-void i2c_slave_mode(i2c_t *obj, int enable_slave);
-
-/** Check to see if the I2C slave has been addressed.
- *  @param obj The I2C object
- *  @return The status - 1 - read addresses, 2 - write to all slaves,
- *         3 write addressed, 0 - the slave has not been addressed
- */
-int  i2c_slave_receive(i2c_t *obj);
-
-/** Configure I2C as slave or master.
- *  @param obj The I2C object
- *  @return non-zero if a value is available
- */
-int  i2c_slave_read(i2c_t *obj, char *data, int length);
-
-/** Configure I2C as slave or master.
- *  @param obj The I2C object
- *  @return non-zero if a value is available
- */
-int  i2c_slave_write(i2c_t *obj, const char *data, int length);
-
-/** Configure I2C address.
- *  @param obj     The I2C object
- *  @param idx     Currently not used
- *  @param address The address to be set
- *  @param mask    Currently not used
- */
-void i2c_slave_address(i2c_t *obj, int idx, uint32_t address, uint32_t mask);
-
-#endif
-
-/**@}*/
-
-#if DEVICE_I2C_ASYNCH
-
-/**
- * \defgroup AsynchI2C Asynchronous I2C Hardware Abstraction Layer
- * @{
- */
-
-/** Start i2c asynchronous transfer.
- *  @param obj       The I2C object
- *  @param tx        The buffer to send
- *  @param tx_length The number of words to transmit
- *  @param rx        The buffer to receive
- *  @param rx_length The number of words to receive
- *  @param address   The address to be set - 7bit or 9 bit
- *  @param stop      If true, stop will be generated after the transfer is done
- *  @param handler   The I2C IRQ handler to be set
- *  @param hint      DMA hint usage
- */
-void i2c_transfer_asynch(i2c_t *obj, const void *tx, size_t tx_length, void *rx, size_t rx_length, uint32_t address, uint32_t stop, uint32_t handler, uint32_t event, DMAUsage hint);
-
-/** The asynchronous IRQ handler
- *  @param obj The I2C object which holds the transfer information
- *  @return event flags if a transfer termination condition was met or 0 otherwise.
- */
-uint32_t i2c_irq_handler_asynch(i2c_t *obj);
-
-/** Attempts to determine if I2C peripheral is already in use.
- *  @param obj The I2C object
- *  @return non-zero if the I2C module is active or zero if it is not
- */
-uint8_t i2c_active(i2c_t *obj);
-
-/** Abort ongoing asynchronous transaction.
- *  @param obj The I2C object
- */
-void i2c_abort_asynch(i2c_t *obj);
-
-#endif
-
-/**@}*/
-
-#ifdef __cplusplus
+static inline void i2c_conclr(int start, int stop, int interrupt, int acknowledge) {
+    LPC_I2C->CONCLR = (start << 5)
+                    | (stop << 4)
+                    | (interrupt << 3)
+                    | (acknowledge << 2);
 }
-#endif
+
+static inline void i2c_conset(int start, int stop, int interrupt, int acknowledge) {
+    LPC_I2C->CONSET = (start << 5)
+                    | (stop << 4)
+                    | (interrupt << 3)
+                    | (acknowledge << 2);
+}
+
+// Clear the Serial Interrupt (SI)
+static inline void i2c_clear_SI() {
+    i2c_conclr(0, 0, 1, 0);
+}
+
+static inline int i2c_status() {
+    return LPC_I2C->STAT;
+}
+
+// Wait until the Serial Interrupt (SI) is set
+static int i2c_wait_SI() {
+    int timeout = 0;
+    while (!(LPC_I2C->CONSET & (1 << 3))) {
+        timeout++;
+        if (timeout > 100000) return -1;
+    }
+    return 0;
+}
+
+static inline void i2c_interface_enable() {
+    LPC_I2C->CONSET = 0x40;
+}
+
+static inline void i2c_power_enable() {
+    LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 5);
+    LPC_SYSCON->PRESETCTRL |= 1 << 1;
+}
+
+static inline void i2c_init() {
+    // determine the SPI to use
+    
+    // enable power
+    i2c_power_enable();
+    
+    // set default frequency at 100k
+    uint32_t PCLK = SystemCoreClock;
+    uint32_t pulse = PCLK / (200000);
+    LPC_I2C->SCLL = pulse;
+    LPC_I2C->SCLH = pulse;
+
+    i2c_conclr(1, 1, 1, 1);
+    i2c_interface_enable();
+
+    __IO uint32_t *regSDA = (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5);
+    __IO uint32_t *regSCL = (__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4);
+
+    *regSDA = ((*regSDA & ~0x7) | 0x1) & ~(0x3 << 3) & ~(0x1 << 10);
+    *regSCL = ((*regSCL & ~0x7) | 0x1) & ~(0x3 << 3) & ~(0x1 << 10);
+}
+
+static inline int i2c_start() {
+    int status = 0;
+    // 8.1 Before master mode can be entered, I2CON must be initialised to:
+    //  - I2EN STA STO SI AA - -
+    //  -  1    0   0   0  x - -
+    // if AA = 0, it can't enter slave mode
+    i2c_conclr(1, 1, 1, 1);
+    
+    // The master mode may now be entered by setting the STA bit
+    // this will generate a start condition when the bus becomes free
+    i2c_conset(1, 0, 0, 1);
+    
+    i2c_wait_SI();
+    status = i2c_status();
+    
+    // Clear start bit now transmitted, and interrupt bit
+    i2c_conclr(1, 0, 0, 0);
+    return status;
+}
+
+static inline int i2c_stop() {
+    int timeout = 0;
+
+    // write the stop bit
+    i2c_conset(0, 1, 0, 0);
+    i2c_clear_SI();
+    
+    // wait for STO bit to reset
+    while(LPC_I2C->CONSET & (1 << 4)) {
+        timeout ++;
+        if (timeout > 100000) return 1;
+    }
+
+    return 0;
+}
+
+static inline int i2c_do_write(int value, uint8_t addr) {
+    // write the data
+    LPC_I2C->DAT = value;
+    
+    // clear SI to init a send
+    i2c_clear_SI();
+    
+    // wait and return status
+    i2c_wait_SI();
+    return i2c_status();
+}
+
+static inline int i2c_do_read(int last) {
+    // we are in state 0x40 (SLA+R tx'd) or 0x50 (data rx'd and ack)
+    if (last) {
+        i2c_conclr(0, 0, 0, 1); // send a NOT ACK
+    } else {
+        i2c_conset(0, 0, 0, 1); // send a ACK
+    }
+    
+    // accept byte
+    i2c_clear_SI();
+    
+    // wait for it to arrive
+    i2c_wait_SI();
+    
+    // return the data
+    return (LPC_I2C->DAT & 0xFF);
+}
+
+// The I2C does a read or a write as a whole operation
+// There are two types of error conditions it can encounter
+//  1) it can not obtain the bus
+//  2) it gets error responses at part of the transmission
+//
+// We tackle them as follows:
+//  1) we retry until we get the bus. we could have a "timeout" if we can not get it
+//      which basically turns it in to a 2)
+//  2) on error, we use the standard error mechanisms to report/debug
+//
+// Therefore an I2C transaction should always complete. If it doesn't it is usually
+// because something is setup wrong (e.g. wiring), and we don't need to programatically
+// check for that
+
+static inline int i2c_read(char *data, int length) {
+    int count, status;
+    
+    status = i2c_start();
+    
+    if ((status != 0x10) && (status != 0x08)) {
+        i2c_stop();
+        return I2C_ERROR_BUS_BUSY;
+    }
+    
+    status = i2c_do_write(READ_ADDR, 1);
+    if (status != 0x40) {
+        i2c_stop();
+        return I2C_ERROR_NO_SLAVE;
+    }
+
+    // Read in all except last byte
+    for (count = 0; count < (length - 1); count++) {
+        int value = i2c_do_read(0);
+        status = i2c_status();
+        if (status != 0x50) {
+            i2c_stop();
+            return count;
+        }
+        data[count] = (char) value;
+    }
+
+    // read in last byte
+    int value = i2c_do_read(1);
+    status = i2c_status();
+    if (status != 0x58) {
+        i2c_stop();
+        return length - 1;
+    }
+    
+    data[count] = (char) value;
+    
+    i2c_stop();
+    
+    return length;
+}
+
+int i2c_write(const char *data, int length) {
+    int i, status;
+    
+    status = i2c_start();
+    
+    if ((status != 0x10) && (status != 0x08)) {
+        i2c_stop();
+        return I2C_ERROR_BUS_BUSY;
+    }
+    
+    status = i2c_do_write(WRITE_ADDR, 1);
+    if (status != 0x18) {
+        i2c_stop();
+        return I2C_ERROR_NO_SLAVE;
+    }
+    
+    for (i=0; i<length; i++) {
+        status = i2c_do_write(data[i], 0);
+        if(status != 0x28) {
+            i2c_stop();
+            return i;
+        }
+    }
+    
+    // clearing the serial interrupt here might cause an unintended rewrite of the last byte
+    // see also issue report https://mbed.org/users/mbed_official/code/mbed/issues/1
+    // i2c_clear_SI(obj);
+    
+    i2c_stop();
+    
+    return length;
+}
+
+
+
 
 #endif
 
-#endif

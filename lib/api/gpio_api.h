@@ -16,39 +16,55 @@
 #ifndef MBED_GPIO_API_H
 #define MBED_GPIO_API_H
 
-#include "device.h"
+#include "PinNames.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Set the given pin as GPIO
- * @param pin The pin to be set as GPIO
- * @return The GPIO port mask for this pin
- **/
-uint32_t gpio_set(PinName pin);
+typedef struct {
+    PinName  pin;
+    uint32_t mask;
 
-/* Checks if gpio object is connected (pin was not initialized with NC)
- * @param pin The pin to be set as GPIO
- * @return 0 if port is initialized with NC
- **/
-int gpio_is_connected(const gpio_t *obj);
+    __IO uint32_t *reg_dir;
+    __IO uint32_t *reg_set;
+    __IO uint32_t *reg_clr;
+    __I  uint32_t *reg_in;
+} gpio_t;
 
-/* GPIO object */
-void gpio_init(gpio_t *obj, PinName pin);
+static inline uint32_t gpio_set(PinName pin) {
+    uint32_t pin_number = (uint32_t)pin;
+    __IO uint32_t *reg = (__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (pin_number - 32));
+    
+    // pin function bits: [2:0] -> 111 = (0x7)
+    *reg = (*reg & ~0x7);
+    
+    return (1 << ((int)pin & 0x1F));
+}
 
-void gpio_mode (gpio_t *obj, PinMode mode);
-void gpio_dir  (gpio_t *obj, PinDirection direction);
+static inline void gpio_init(gpio_t *obj, PinName pin) {
+    obj->pin = pin;
 
-void gpio_write(gpio_t *obj, int value);
-int  gpio_read (gpio_t *obj);
+    obj->mask = gpio_set(pin);
+    
+    unsigned int port = (unsigned int)pin >> PORT_SHIFT;
+    
+    obj->reg_set = &LPC_GPIO->SET[port];
+    obj->reg_clr = &LPC_GPIO->CLR[port];
+    obj->reg_in  = &LPC_GPIO->PIN[port];
+    obj->reg_dir = &LPC_GPIO->DIR[port];
+}
 
-// the following set of functions are generic and are implemented in the common gpio.c file
-void gpio_init_in(gpio_t* gpio, PinName pin);
-void gpio_init_in_ex(gpio_t* gpio, PinName pin, PinMode mode);
-void gpio_init_out(gpio_t* gpio, PinName pin);
-void gpio_init_out_ex(gpio_t* gpio, PinName pin, int value);
-void gpio_init_inout(gpio_t* gpio, PinName pin, PinDirection direction, PinMode mode, int value);
+static inline void gpio_write(gpio_t *obj, int value) {
+    if (value)
+        *obj->reg_set = obj->mask;
+    else
+        *obj->reg_clr = obj->mask;
+}
+
+static inline int gpio_read(gpio_t *obj) {
+    return ((*obj->reg_in & obj->mask) ? 1 : 0);
+}
 
 #ifdef __cplusplus
 }

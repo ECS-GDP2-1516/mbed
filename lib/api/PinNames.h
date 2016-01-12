@@ -16,7 +16,7 @@
 #ifndef MBED_PINNAMES_H
 #define MBED_PINNAMES_H
 
-#include "cmsis.h"
+#include "LPC11Uxx.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -187,6 +187,9 @@ typedef enum {
     OpenDrain = 4,
     PullDefault = PullDown
 } PinMode;
+
+#define LPC_IOCON0_BASE (LPC_IOCON_BASE)
+#define LPC_IOCON1_BASE (LPC_IOCON_BASE + 0x60)
 
 #ifdef __cplusplus
 }
