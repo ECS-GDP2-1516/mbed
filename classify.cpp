@@ -51,11 +51,11 @@ int classify(int8_t rear, int16_t buffer[])
     }
 
     // Detects peak or trough
-    if (v[0] > v[2])
+    if (v[0] > v[2] && v[0] > v[1])
     {
         return PEAK;
     }
-    else if (v[1] > v[2])
+    else if (v[1] > v[2] && v[1] > v[0])
     {
         return TROU;
     }
