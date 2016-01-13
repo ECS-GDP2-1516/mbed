@@ -104,3 +104,9 @@ void SystemInit (void) {
   most of the I/O related peripherals won't work. */
   LPC_SYSCON->SYSAHBCLKCTRL |= (1<<16);
 }
+
+extern int __real_main(void);
+
+extern int __wrap_main(void) {
+    return __real_main();
+}

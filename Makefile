@@ -3,7 +3,7 @@
 
 GCC_BIN = 
 PROJECT = mbed_blinky
-OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./classify.o ./lib/retarget.o ./lib/startup_LPC11xx.o
+OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./classify.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./LPC11U24.ld
 MBED_DIR = /media/mohit/MBED
