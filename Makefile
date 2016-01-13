@@ -22,7 +22,7 @@ CPU = -mcpu=cortex-m0 -mthumb
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
 CC_SYMBOLS = -Os
 
-LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=$(PROJECT).map,--cref
+LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,-Map=$(PROJECT).map,--cref
 LD_SYS_LIBS = -lc -lnosys
 
 
