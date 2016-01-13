@@ -16,18 +16,7 @@
 #ifndef MBED_I2C_API_H
 #define MBED_I2C_API_H
 
-#include "PinNames.h"
-
-/**
- * @defgroup I2CEvents I2C Events Macros
- *
- * @{
- */
-#define I2C_EVENT_ERROR               (1 << 1)
-#define I2C_EVENT_ERROR_NO_SLAVE      (1 << 2)
-#define I2C_EVENT_TRANSFER_COMPLETE   (1 << 3)
-#define I2C_EVENT_TRANSFER_EARLY_NACK (1 << 4)
-#define I2C_EVENT_ALL                 (I2C_EVENT_ERROR |  I2C_EVENT_TRANSFER_COMPLETE | I2C_EVENT_ERROR_NO_SLAVE | I2C_EVENT_TRANSFER_EARLY_NACK)
+#include "LPC11Uxx.h"
 
 #define WRITE_ADDR (211 & 0xFE)
 #define READ_ADDR (211 | 0x01)

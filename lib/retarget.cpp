@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "PinNames.h"
+#include "LPC11Uxx.h"
 #include "toolchain.h"
 
 #include <errno.h>

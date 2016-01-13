@@ -16,11 +16,7 @@
 #ifndef MBED_DIGITALOUT_H
 #define MBED_DIGITALOUT_H
 
-#include <cstddef>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include "PinNames.h"
+ #include "LPC11Uxx.h"
 
 #define LPC_GPIO_REG_DIR ((uint32_t*)(0x50002004))
 #define LPC_GPIO_REG_SET ((uint32_t*)(0x50002204))
