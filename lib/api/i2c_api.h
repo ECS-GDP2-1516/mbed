@@ -24,6 +24,8 @@
 #define SDA_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5))
 #define SCL_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 5 * 5))
 
+#define PULSE (__SYSTEM_CLOCK / 200000)
+
 /**@}*/
 
 enum {
@@ -79,11 +81,8 @@ static inline void i2c_init() {
     // enable power
     i2c_power_enable();
     
-    // set default frequency at 100k
-    uint32_t PCLK = SystemCoreClock;
-    uint32_t pulse = PCLK / (200000);
-    LPC_I2C->SCLL = pulse;
-    LPC_I2C->SCLH = pulse;
+    LPC_I2C->SCLL = PULSE;
+    LPC_I2C->SCLH = PULSE;
 
     i2c_conclr(1, 1, 1, 1);
     i2c_interface_enable();
