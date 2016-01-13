@@ -22,12 +22,15 @@ static inline uint8_t classify(int8_t rear, int16_t buffer[])
 {
     int32_t* offset=(int32_t*)W;
     
-    int32_t nodeA = *offset++;
-    int8_t j     = rear;
+    int32_t nodeA = offset[0];
+    int32_t nodeB = offset[BUFFER_SIZE + 1];
+    int8_t j      = rear;
     while (1)
     {
+        offset++;
         j      = (j + 1) % BUFFER_SIZE;
-        nodeA += (*offset++ * buffer[j]) >> 12;
+        nodeA += (offset[0]               * buffer[j]) >> 12;
+        nodeB += (offset[BUFFER_SIZE + 1] * buffer[j]) >> 12;
 
         if (j == rear)
         {
@@ -35,20 +38,9 @@ static inline uint8_t classify(int8_t rear, int16_t buffer[])
         }
     }
     sigmoid(&nodeA);
-
-    int32_t nodeB = *offset++;
-    j             = rear;
-    while (1)
-    {
-        j      = (j + 1) % BUFFER_SIZE;
-        nodeB += (*offset++ * buffer[j]) >> 12;
-
-        if (j == rear)
-        {
-            break;
-        }
-    }
     sigmoid(&nodeB);
+
+    offset += BUFFER_SIZE + 2;
 
     int32_t v[3];
 
