@@ -132,7 +132,7 @@ static inline int i2c_stop() {
     return 0;
 }
 
-static inline int i2c_do_write(int value, uint8_t addr) {
+static inline int i2c_do_write(int value) {
     // write the data
     LPC_I2C->DAT = value;
     
@@ -186,7 +186,7 @@ static inline int i2c_read(char *data, int length) {
         return I2C_ERROR_BUS_BUSY;
     }
     
-    status = i2c_do_write(READ_ADDR, 1);
+    status = i2c_do_write(READ_ADDR);
     if (status != 0x40) {
         i2c_stop();
         return I2C_ERROR_NO_SLAVE;
@@ -228,14 +228,14 @@ int i2c_write(const char *data, int length) {
         return I2C_ERROR_BUS_BUSY;
     }
     
-    status = i2c_do_write(WRITE_ADDR, 1);
+    status = i2c_do_write(WRITE_ADDR);
     if (status != 0x18) {
         i2c_stop();
         return I2C_ERROR_NO_SLAVE;
     }
     
     for (i=0; i<length; i++) {
-        status = i2c_do_write(data[i], 0);
+        status = i2c_do_write(data[i]);
         if(status != 0x28) {
             i2c_stop();
             return i;
