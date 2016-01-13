@@ -62,12 +62,9 @@ int main() {
     //int* i = data;
     led_off(LED3_MASK);
     
-    int count;
-    
     //first, fill up the buffer with values
-    for(count=0; count<BUFFER_SIZE/3; count++) {
-        rear = (rear + 3) % BUFFER_SIZE;
-        getAcceleration(&buffer[rear - 2]);
+    for(rear=0; rear < BUFFER_SIZE; rear += 3) {
+        getAcceleration(&buffer[rear]);
     }
 
     led_on(LED3_MASK);
@@ -75,6 +72,8 @@ int main() {
     //initiate the heuristic before classifying
     init_heur();
 
+    rear = -1;
+    
     //now we continue to read values and classify them
     while(1) {
         rear = (rear + 3) % BUFFER_SIZE;
