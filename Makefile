@@ -23,7 +23,7 @@ CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunctio
 CC_SYMBOLS = -Os
 
 LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,--wrap,main -Wl,-Map=$(PROJECT).map,--cref
-LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+LD_SYS_LIBS = -lc -lnosys
 
 
 .PHONY: all clean lst size deploy
