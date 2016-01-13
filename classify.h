@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-void sigmoid(int32_t* var);
+static void sigmoid(int32_t* var);
 
 #define PEAK 0
 #define TROU 1
@@ -61,6 +61,22 @@ static inline uint8_t classify(int8_t rear, int16_t buffer[])
     else //Not exercise
     {
         return NOT_EX;
+    }
+}
+
+static void sigmoid(int32_t* var)
+{
+    if (*var < -5 << 12)
+    {
+        *var = 0;
+    }
+    else if (*var > 5 << 12)
+    {
+        *var = 1 << 12;
+    }
+    else
+    {
+        *var = ((410 * *var) >> 12) + 2048;
     }
 }
 
