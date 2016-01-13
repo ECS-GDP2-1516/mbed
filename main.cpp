@@ -47,14 +47,6 @@ int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
  */
 
 int main() {
-    LPC_SYSCON->WDTOSCCTRL = (0x1 << 5) | 0x5;   // Sets the watchdog oscillator register | First hex is Frequency, Second is Divisor
-    LPC_SYSCON->PDRUNCFG   &= ~(1 << 6);         // Powers on the watchdog oscillator
-    LPC_SYSCON->MAINCLKSEL = 0x2;                // Sets watchdog oscillator as main clk
-    LPC_SYSCON->MAINCLKUEN = 0x1;                //
-    LPC_SYSCON->MAINCLKUEN = 0x0;                // Applies these changes
-    LPC_SYSCON->MAINCLKUEN = 0x1;                //
-    while (!(LPC_SYSCON->MAINCLKUEN & 0x01));    // Waits for changes to complete
-
     init_led(LED2_REG, LED2_MASK);
     init_led(LED3_REG, LED3_MASK);
     init_led(LED4_REG, LED4_MASK);
