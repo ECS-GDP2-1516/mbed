@@ -20,14 +20,6 @@
 // Minor fix 8 April 2011 - changed LPC_CT32B1_BASE from 0x40014000 to 0x40018000
 // ################################################################################
 
-/** @addtogroup NXP
-  * @{
-  */
-
-/** @addtogroup LPC11Uxx
-  * @{
-  */
-
 #ifndef __LPC11UXX_H__
 #define __LPC11UXX_H__
 
@@ -35,76 +27,15 @@
 extern "C" {
 #endif 
 
-
-#if defined ( __CC_ARM   )
-  #pragma anon_unions
+#ifdef __cplusplus
+  #define   __I     volatile             /*!< Defines 'read only' permissions                 */
+#else
+  #define   __I     volatile const       /*!< Defines 'read only' permissions                 */
 #endif
+#define     __O     volatile             /*!< Defines 'write only' permissions                */
+#define     __IO    volatile             /*!< Defines 'read / write' permissions              */
 
- /* Interrupt Number Definition */
-
-typedef enum {
-// -------------------------  Cortex-M0 Processor Exceptions Numbers  -----------------------------
-  Reset_IRQn                        = -15,  /*!<   1  Reset Vector, invoked on Power up and warm reset */
-  NonMaskableInt_IRQn               = -14,  /*!<   2  Non maskable Interrupt, cannot be stopped or preempted */
-  HardFault_IRQn                    = -13,  /*!<   3  Hard Fault, all classes of Fault */
-  SVCall_IRQn                       = -5,   /*!<  11  System Service Call via SVC instruction */
-  DebugMonitor_IRQn                 = -4,   /*!<  12  Debug Monitor                    */
-  PendSV_IRQn                       = -2,   /*!<  14  Pendable request for system service */
-  SysTick_IRQn                      = -1,   /*!<  15  System Tick Timer                */
-// ---------------------------  LPC11Uxx Specific Interrupt Numbers  ------------------------------
-FLEX_INT0_IRQn                = 0,        /*!< All I/O pins can be routed to below 8 interrupts. */
-  FLEX_INT1_IRQn                = 1,
-  FLEX_INT2_IRQn                = 2,
-  FLEX_INT3_IRQn                = 3,
-  FLEX_INT4_IRQn                = 4,   
-  FLEX_INT5_IRQn                = 5,        
-  FLEX_INT6_IRQn                = 6,        
-  FLEX_INT7_IRQn                = 7,        
-  GINT0_IRQn                    = 8,        /*!< Grouped Interrupt 0                              */
-  GINT1_IRQn                    = 9,        /*!< Grouped Interrupt 1                              */
-  Reserved0_IRQn                = 10,       /*!< Reserved Interrupt                               */
-  Reserved1_IRQn                = 11,       
-  Reserved2_IRQn                = 12,       
-  Reserved3_IRQn                = 13,       
-  SSP1_IRQn                     = 14,       /*!< SSP1 Interrupt                                   */
-  I2C_IRQn                      = 15,       /*!< I2C Interrupt                                    */
-  TIMER_16_0_IRQn               = 16,       /*!< 16-bit Timer0 Interrupt                          */
-  TIMER_16_1_IRQn               = 17,       /*!< 16-bit Timer1 Interrupt                          */
-  TIMER_32_0_IRQn               = 18,       /*!< 32-bit Timer0 Interrupt                          */
-  TIMER_32_1_IRQn               = 19,       /*!< 32-bit Timer1 Interrupt                          */
-  SSP0_IRQn                     = 20,       /*!< SSP0 Interrupt                                   */
-  UART_IRQn                     = 21,       /*!< UART Interrupt                                   */
-  USB_IRQn                      = 22,       /*!< USB IRQ Interrupt                                */
-  USB_FIQn                      = 23,       /*!< USB FIQ Interrupt                                */
-  ADC_IRQn                      = 24,       /*!< A/D Converter Interrupt                          */
-  WDT_IRQn                      = 25,       /*!< Watchdog timer Interrupt                         */  
-  BOD_IRQn                      = 26,       /*!< Brown Out Detect(BOD) Interrupt                  */
-  FMC_IRQn                      = 27,       /*!< Flash Memory Controller Interrupt                */
-  Reserved4_IRQn                = 28,       /*!< Reserved Interrupt                               */
-  Reserved5_IRQn                = 29,       /*!< Reserved Interrupt                               */
-  USBWakeup_IRQn                = 30,       /*!< USB wakeup Interrupt                             */
-  Reserved6_IRQn                = 31,       /*!< Reserved Interrupt                               */
-} IRQn_Type;
-
-
-/** @addtogroup Configuration_of_CMSIS
-  * @{
-  */
-
-/* Processor and Core Peripheral Section */ /* Configuration of the Cortex-M0 Processor and Core Peripherals */
-
-#define __MPU_PRESENT             0         /*!< MPU present or not                    */
-#define __NVIC_PRIO_BITS          3         /*!< Number of Bits used for Priority Levels */
-#define __Vendor_SysTickConfig    0         /*!< Set to 1 if different SysTick Config is used */
-/** @} */ /* End of group Configuration_of_CMSIS */
-
-#include "core_cm0.h"                       /*!< Cortex-M0 processor and core peripherals */
 #include "system_LPC11Uxx.h"                /*!< LPC11Uxx System                       */
-
-/** @addtogroup Device_Peripheral_Registers
-  * @{
-  */
-
 
 // ------------------------------------------------------------------------------------------------
 // -----                                          I2C                                         -----
@@ -207,12 +138,6 @@ typedef struct {                            /*!< (@ 0x40048000) SYSCON Structure
   __I  uint32_t DEVICE_ID;                  /*!< (@ 0x400483F4) Device ID              */
 } LPC_SYSCON_Type;
 
-
-#if defined ( __CC_ARM   )
-  #pragma no_anon_unions
-#endif
-
-
 // ------------------------------------------------------------------------------------------------
 // -----                                 Peripheral memory map                                -----
 // ------------------------------------------------------------------------------------------------
@@ -230,11 +155,6 @@ typedef struct {                            /*!< (@ 0x40048000) SYSCON Structure
 
 #define LPC_I2C                   ((LPC_I2C_Type            *) LPC_I2C_BASE)
 #define LPC_SYSCON                ((LPC_SYSCON_Type         *) LPC_SYSCON_BASE)
-
-
-/** @} */ /* End of group Device_Peripheral_Registers */
-/** @} */ /* End of group (null) */
-/** @} */ /* End of group LPC11Uxx */
 
 #ifdef __cplusplus
 }

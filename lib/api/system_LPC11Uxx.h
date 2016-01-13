@@ -32,6 +32,11 @@ extern "C" {
 
 #include <stdint.h>
 
+__attribute__((always_inline)) static inline void __NOP(void)
+{
+  __asm volatile ("nop");
+}
+
 /**
  * Initialize the system
  *
