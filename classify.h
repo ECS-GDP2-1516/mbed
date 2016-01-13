@@ -5,12 +5,28 @@
 
 #include <stdint.h>
 
+/**
+ * Approximates sigmoid with the given value
+ */
 static void sigmoid(int32_t* var);
 
-#define PEAK 0
-#define TROU 1
-#define NOT_EX 2
+/**
+ * Classifications this MLP is capable of
+ */
+typedef enum
+{
+    PEAK   = 0,
+    TROU   = 1,
+    NOT_EX = 2
+} ExType;
 
+/**
+ * Weights for the connections between the MLP neural network.
+ *
+ * This represent float which have been multiplied by 2^12 and then
+ * rounded to the nearest int. As such, when multiplying two of these
+ * together, remember to shift down by 12 afterwards.
+ */
 const int32_t W[71] =
 {
     /* Input Layer: */
@@ -39,7 +55,14 @@ const int32_t W[71] =
         /* NOT_EX:  */ -1993,   36688,  -45645
 };
 
-static inline uint8_t classify(int8_t rear, int16_t buffer[])
+/**
+ * Classifies the data in the given buffer using the hardcoded neural network
+ *
+ * @param int8_t rear The index of the last element in the buffer
+ * @param int16_t[] buffer A circular buffer
+ * @return ExType The classified form of movement
+ */
+static inline ExType classify(int8_t rear, int16_t buffer[])
 {
     int32_t* offset=(int32_t*)W;
     
@@ -82,6 +105,11 @@ static inline uint8_t classify(int8_t rear, int16_t buffer[])
     }
 }
 
+/**
+ * Approximates Sigmoid for the given value
+ *
+ * @param int32_t* var Pointer to an int value
+ */
 static void sigmoid(int32_t* var)
 {
     if (*var < -5 << 12)

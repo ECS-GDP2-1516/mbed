@@ -39,13 +39,14 @@ THE SOFTWARE.
 
 #include "i2c_api.h"
 
+/**
+ * Addresses in the I2C
+ */
 #define MPU6050_RA_GYRO_CONFIG      0x1B
 #define MPU6050_RA_ACCEL_CONFIG     0x1C
 #define MPU6050_RA_ACCEL_XOUT_H     0x3B
 #define MPU6050_RA_PWR_MGMT_1       0x6B
 
-
-// note: DMP code memory blocks defined at end of header file
 
 static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     int written = i2c_write((const char *)&regAddr, 1);
