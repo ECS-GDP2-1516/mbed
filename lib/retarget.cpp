@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "LPC11Uxx.h"
 
-
-// ****************************************************************************
-// mbed_main is a function that is called before main()
-// mbed_sdk_init() is also a function that is called before main(), but unlike
-// mbed_main(), it is not meant for user code, but for the SDK itself to perform
-// initializations before main() is called.
 
 extern "C" int __real_main(void);
 
 extern "C" int __wrap_main(void) {
-    //mbed_sdk_init();
-    //mbed_main();
     return __real_main();
 }
 
