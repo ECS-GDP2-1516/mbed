@@ -15,9 +15,6 @@
  */
 #include "LPC11Uxx.h"
 
-#include <errno.h>
-
-#   include <sys/unistd.h>
 
 // ****************************************************************************
 // mbed_main is a function that is called before main()
@@ -32,30 +29,4 @@ extern "C" int __wrap_main(void) {
     //mbed_main();
     return __real_main();
 }
-
-// Provide implementation of _sbrk (low-level dynamic memory allocation
-// routine) for GCC_ARM which compares new heap pointer with MSP instead of
-// SP.  This make it compatible with RTX RTOS thread stacks.
-// Linker defined symbol used by _sbrk to indicate where heap should start.
-extern "C" int __end__;
-
-// Turn off the errno macro and use actual global variable instead.
-#undef errno
-extern "C" int errno;
-
-// Dynamic memory allocation related syscall.
-extern "C" caddr_t _sbrk(int incr) {
-    static unsigned char* heap = (unsigned char*)&__end__;
-    unsigned char*        prev_heap = heap;
-    unsigned char*        new_heap = heap + incr;
-
-    if (new_heap >= (unsigned char*)__get_MSP()) {
-        errno = ENOMEM;
-        return (caddr_t)-1;
-    }
-
-    heap = new_heap;
-    return (caddr_t) prev_heap;
-}
-
 
