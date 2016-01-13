@@ -4,7 +4,6 @@
 #include "heuristic.h"
 
 
-using namespace mbed;
 using namespace std;
 
 
@@ -18,9 +17,9 @@ using namespace std;
 #define Az_offset 0.14
 
 //Serial serial(p9, p10);
-DigitalOut myled(LED2);
-DigitalOut myled2(LED3);
-DigitalOut myled3(LED4);
+//DigitalOut myled(LED2);
+//DigitalOut myled2(LED3);
+//DigitalOut myled3(LED4);
 
 int8_t rear = -1;
 int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
@@ -56,16 +55,20 @@ int main() {
     LPC_SYSCON->MAINCLKUEN = 0x1;                //
     while (!(LPC_SYSCON->MAINCLKUEN & 0x01));    // Waits for changes to complete
 
+    init_led(LED2_REG, LED2_MASK);
+    init_led(LED3_REG, LED3_MASK);
+    init_led(LED4_REG, LED4_MASK);
+
     //LPC_USART->ACR = 0x7;
     init();
 
     //serial.printf("Testing device connections....\n");
     //serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
-    myled3 = 1;
+    led_on(LED4_MASK);
 
     //data   = (int *)malloc(sizeof(int) * CLASSIFY_MEMORY_ALLOCATION);
     //int* i = data;
-    myled2 = 0;
+    led_off(LED3_MASK);
     
     int count;
     
@@ -75,7 +78,7 @@ int main() {
         getAcceleration(&buffer[rear - 2]);
     }
 
-    myled2 = 1;
+    led_on(LED3_MASK);
     
     //initiate the heuristic before classifying
     init_heur();
@@ -85,6 +88,13 @@ int main() {
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
 
-        myled = heur_classify(classify(rear, buffer));
+        if (heur_classify(classify(rear, buffer)))
+        {
+            led_on(LED2_MASK);
+        }
+        else
+        {
+            led_off(LED2_MASK);
+        }
     }
 }

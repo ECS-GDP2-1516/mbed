@@ -16,75 +16,46 @@
 #ifndef MBED_DIGITALOUT_H
 #define MBED_DIGITALOUT_H
 
-#include "PinNames.h"
-
 #include <cstddef>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-#include "gpio_api.h"
 #include "PinNames.h"
 
-namespace mbed {
+#define LPC_GPIO_REG_DIR ((uint32_t*)(0x50002004))
+#define LPC_GPIO_REG_SET ((uint32_t*)(0x50002204))
+#define LPC_GPIO_REG_CLR ((uint32_t*)(0x50002284))
 
-/** A digital output, used for setting the state of a pin
- *
- * Example:
- * @code
- * // Toggle a LED
- * #include "mbed.h"
- *
- * DigitalOut led(LED1);
- *
- * int main() {
- *     while(1) {
- *         led = !led;
- *         wait(0.2);
- *     }
- * }
- * @endcode
- */
-class DigitalOut {
+#define LED1_MASK (1 << (40 & 0x1F))
+#define LED2_MASK (1 << (41 & 0x1F))
+#define LED3_MASK (1 << (42 & 0x1F))
+#define LED4_MASK (1 << (43 & 0x1F))
 
-public:
-    /** Create a DigitalOut connected to the specified pin
-     *
-     *  @param pin DigitalOut pin to connect to
-     */
-    DigitalOut(PinName pin) : gpio() {
-        gpio_init(&gpio, pin);
-        gpio_write(&gpio, 0);
-        *LPC_GPIO_REG_DIR |= gpio.mask;
+#define LED1_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (40 - 32)))
+#define LED2_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (41 - 32)))
+#define LED3_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (42 - 32)))
+#define LED4_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (43 - 32)))
 
-        uint32_t pin_number = (uint32_t)pin;
-        __IO uint32_t *reg = (__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (pin_number - 32));
-        
-        uint32_t tmp = *reg;
-        tmp &= ~(0x3 << 3);
-        tmp &= ~(0x1 << 10);
-        *reg = tmp;
-    }
+void init_led(__IO uint32_t* reg, uint32_t mask)
+{
+    *reg               = (*reg & ~0x7);
+    *LPC_GPIO_REG_CLR  = mask;;
+    *LPC_GPIO_REG_DIR |= mask;
+    
+    uint32_t tmp = *reg;
+    tmp &= ~(0x3 << 3);
+    tmp &= ~(0x1 << 10);
+    *reg = tmp;
+}
 
-    /** Set the output, specified as 0 or 1 (int)
-     *
-     *  @param value An integer specifying the pin output value,
-     *      0 for logical 0, 1 (or any other non-zero value) for logical 1
-     */
-    void write(int value) {
-        gpio_write(&gpio, value);
-    }
+static inline void led_on(uint32_t mask)
+{
+    *LPC_GPIO_REG_SET = mask;
+}
 
-    /** A shorthand for write()
-     */
-    DigitalOut& operator= (int value) {
-        write(value);
-        return *this;
-    }
-
-protected:
-    gpio_t gpio;
-};
-
-} // namespace mbed
+static inline void led_off(uint32_t mask)
+{
+    *LPC_GPIO_REG_CLR = mask;
+}
 
 #endif
