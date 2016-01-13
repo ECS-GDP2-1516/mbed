@@ -52,7 +52,7 @@ enum {
 #define READ_ADDR  (211 | 0x01)
 
 #define SDA_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5))
-#define SCL_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 5 * 5))
+#define SCL_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4))
 
 #define PULSE (__SYSTEM_CLOCK / 200000)
 
