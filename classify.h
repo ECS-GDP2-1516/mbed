@@ -25,18 +25,15 @@ static inline uint8_t classify(int8_t rear, int16_t buffer[])
     int32_t nodeA = offset[0];
     int32_t nodeB = offset[BUFFER_SIZE + 1];
     int8_t j      = rear;
-    while (1)
+    
+    do
     {
         offset++;
         j      = (j + 1) % BUFFER_SIZE;
         nodeA += (offset[0]               * buffer[j]) >> 12;
         nodeB += (offset[BUFFER_SIZE + 1] * buffer[j]) >> 12;
+    } while (j != rear);
 
-        if (j == rear)
-        {
-            break;
-        }
-    }
     sigmoid(&nodeA);
     sigmoid(&nodeB);
 
