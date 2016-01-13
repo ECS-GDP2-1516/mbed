@@ -65,7 +65,7 @@ static inline uint8_t classify(int8_t rear, int16_t buffer[])
     {
         return PEAK;
     }
-    else if (v[1] > v[2] && v[1] > v[0])
+    else if (v[1] > v[2])
     {
         return TROU;
     }
