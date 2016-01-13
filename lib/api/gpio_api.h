@@ -18,6 +18,10 @@
 
 #include "PinNames.h"
 
+#define LPC_GPIO_REG_DIR ((uint32_t*)(0x50002004))
+#define LPC_GPIO_REG_SET ((uint32_t*)(0x50002204))
+#define LPC_GPIO_REG_CLR ((uint32_t*)(0x50002284))
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,9 +46,9 @@ static inline void gpio_init(gpio_t *obj, PinName pin) {
 
 static inline void gpio_write(gpio_t *obj, int value) {
     if (value)
-        LPC_GPIO->SET[1] = obj->mask;
+        *LPC_GPIO_REG_SET = obj->mask;
     else
-        LPC_GPIO->CLR[1] = obj->mask;
+        *LPC_GPIO_REG_CLR = obj->mask;
 }
 
 #ifdef __cplusplus
