@@ -18,9 +18,9 @@
 
  #include "LPC11Uxx.h"
 
-#define LPC_GPIO_REG_DIR ((uint32_t*)(0x50002004))
-#define LPC_GPIO_REG_SET ((uint32_t*)(0x50002204))
-#define LPC_GPIO_REG_CLR ((uint32_t*)(0x50002284))
+#define LPC_GPIO_REG_DIR ((__IO uint32_t*)(0x50002004))
+#define LPC_GPIO_REG_SET ((__IO uint32_t*)(0x50002204))
+#define LPC_GPIO_REG_CLR ((__O  uint32_t*)(0x50002284))
 
 #define LED1_MASK (1 << (40 & 0x1F))
 #define LED2_MASK (1 << (41 & 0x1F))
