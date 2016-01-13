@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "LPC11Uxx.h"
-#include "toolchain.h"
 
 #include <errno.h>
 
