@@ -23,11 +23,12 @@
  ******************************************************************************/
 
 
-#include <stdint.h>
 #include "LPC11Uxx.h"
 
-uint32_t SystemCoreClock = __SYSTEM_CLOCK;
-
+__attribute__((always_inline)) static inline void __NOP(void)
+{
+  __asm volatile ("nop");
+}
 
 /**
  * Initialize the system
