@@ -4,11 +4,11 @@
 #include "classify.h"
 
 #define HEUR_SIZE 10
+#define MAX_NOT_EX 0
 
 int8_t heur_rear = -1;
 int8_t last_value = -1;
 uint8_t heur_buffer[HEUR_SIZE]; //store the latest values from the classifier
-uint8_t max_not_ex = 0;
 
 static inline void init_heur() {
     for(uint8_t i=0; i<HEUR_SIZE; i++) {
@@ -30,7 +30,7 @@ static inline bool heur_classify(uint8_t value) {
     for(uint8_t i=0; i<HEUR_SIZE; i++) {
         if(heur_buffer[i] == NOT_EX) {
             not_ex++;
-            if(not_ex > max_not_ex) {
+            if(not_ex > MAX_NOT_EX) {
                 return 0;
             }
         }
