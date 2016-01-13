@@ -32,7 +32,7 @@
 #define LED3_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (42 - 32)))
 #define LED4_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (43 - 32)))
 
-void init_led(__IO uint32_t* reg, uint32_t mask)
+static void init_led(__IO uint32_t* reg, uint32_t mask)
 {
     *reg               = (*reg & ~0x7);
     *LPC_GPIO_REG_CLR  = mask;;

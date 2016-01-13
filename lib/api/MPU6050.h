@@ -47,7 +47,7 @@ THE SOFTWARE.
 
 // note: DMP code memory blocks defined at end of header file
 
-int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
+static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     int written = i2c_write((const char *)&regAddr, 1);
     if(length != written)
         return -1;
@@ -57,14 +57,14 @@ int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     return length != read;
 }
 
-void writeBytes(uint8_t regAddr, uint8_t *data) {
+static inline void writeBytes(uint8_t regAddr, uint8_t *data) {
     uint8_t send[2];
     send[0] = regAddr;
     send[1] = data[0];
     i2c_write((const char *)send, 2);
 }
 
-void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data) {
+static void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data) {
     uint8_t b;
     if(readBytes(regAddr, 1, &b))
         return;
