@@ -46,11 +46,12 @@ THE SOFTWARE.
 #define MPU6050_RA_ACCEL_CONFIG     0x1C
 #define MPU6050_RA_ACCEL_XOUT_H     0x3B
 #define MPU6050_RA_PWR_MGMT_1       0x6B
+#define MPU6050_RA_PWR_MGMT_2       0x6C
 
 
 static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     int written = i2c_write((const char *)&regAddr, 1);
-    if(length != written)
+    if(1 != written)
         return -1;
 
     int read = i2c_read((char *)data, length);
@@ -80,13 +81,20 @@ static inline void init()
 {
     i2c_init();
 
-    writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x01);
+    writeBits(MPU6050_RA_PWR_MGMT_1, 0x90, 0x29);
     writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
     writeBits(MPU6050_RA_ACCEL_CONFIG, 0xE7, 0x00);
+    writeBits(MPU6050_RA_PWR_MGMT_2, ~0xC7, 0xC7);
 }
 
 static inline void getAcceleration(int16_t* buffer) {
-    readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, (uint8_t*)buffer);
+    uint8_t buf[14];
+
+    readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, (uint8_t*)buf);
+
+    buffer[0] = (((uint16_t)buf[0]) << 8) | buf[1];
+    buffer[1] = (((uint16_t)buf[2]) << 8) | buf[3];
+    buffer[2] = (((uint16_t)buf[4]) << 8) | buf[5];
 
     buffer[0] = buffer[0] >> 2;
     buffer[1] = buffer[1] >> 2;

@@ -26,11 +26,13 @@
 #define LED2_MASK (1 << (41 & 0x1F))
 #define LED3_MASK (1 << (42 & 0x1F))
 #define LED4_MASK (1 << (43 & 0x1F))
+#define P12_MASK (1 << (53 & 0x1F))
 
 #define LED1_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (40 - 32)))
 #define LED2_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (41 - 32)))
 #define LED3_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (42 - 32)))
 #define LED4_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (43 - 32)))
+#define P12_REG ((__IO uint32_t*)(LPC_IOCON1_BASE + 4 * (53 - 32)))
 
 static void init_led(__IO uint32_t* reg, uint32_t mask)
 {

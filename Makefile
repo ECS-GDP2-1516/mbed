@@ -6,7 +6,7 @@ PROJECT = mbed_blinky
 OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./LPC11U24.ld
-MBED_DIR = /media/mohit/MBED
+MBED_DIR = /E
 
 ############################################################################### 
 AS      = $(GCC_BIN)arm-none-eabi-as
