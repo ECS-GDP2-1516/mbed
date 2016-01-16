@@ -1,7 +1,7 @@
 #ifndef _CLASSIFY_H_
 #define _CLASSIFY_H_
 
-#define BUFFER_SIZE 30
+#define BUFFER_SIZE 60
 
 #include <stdint.h>
 
@@ -27,7 +27,7 @@ typedef enum
  * rounded to the nearest int. As such, when multiplying two of these
  * together, remember to shift down by 12 afterwards.
  */
-const int W[131] =
+const int32_t W[131] =
 {
     -48651,28586,
 
