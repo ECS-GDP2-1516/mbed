@@ -92,13 +92,9 @@ static inline void getAcceleration(int16_t* buffer) {
 
     readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, (uint8_t*)buf);
 
-    buffer[0] = (((uint16_t)buf[0]) << 8) | buf[1];
-    buffer[1] = (((uint16_t)buf[2]) << 8) | buf[3];
-    buffer[2] = (((uint16_t)buf[4]) << 8) | buf[5];
-
-    buffer[0] = buffer[0] >> 2;
-    buffer[1] = buffer[1] >> 2;
-    buffer[2] = buffer[2] >> 2;
+    buffer[0] = (((uint16_t)buf[0]) << 6) | (buf[1] >> 2);
+    buffer[1] = (((uint16_t)buf[2]) << 6) | (buf[3] >> 2);
+    buffer[2] = (((uint16_t)buf[4]) << 6) | (buf[5] >> 2);
 }
 
 #endif /* _MPU6050_H_ */
