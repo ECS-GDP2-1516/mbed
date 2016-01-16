@@ -54,7 +54,7 @@ enum {
 #define SDA_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5))
 #define SCL_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4))
 
-#define PULSE (__SYSTEM_CLOCK / 200000)
+#define PULSE (4)
 
 #define LPC_I2C_BASE              (0x40000000)
 #define LPC_I2C                   ((LPC_I2C_Type            *) LPC_I2C_BASE)

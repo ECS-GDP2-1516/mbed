@@ -24,7 +24,7 @@ extern "C" {
 
 #define CLOCK_SETUP           1
 #define SYSOSCCTRL_Val        0x00000000              // Reset: 0x000
-#define WDTOSCCTRL_Val        ((0x1 << 5) | 0x5)      // Reset: 0x000
+#define WDTOSCCTRL_Val        ((0x4 << 5) | 0x5)      // Reset: 0x000
 #define SYSPLLCTRL_Val        0x00000023              // Reset: 0x000
 #define SYSPLLCLKSEL_Val      0x00000001              // Reset: 0x000
 #define MAINCLKSEL_Val        0x00000002              // Reset: 0x000
