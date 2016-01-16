@@ -1,7 +1,8 @@
-#include "MPU6050.h"
+
 #include "classify.h"
 #include "DigitalOut.h"
 #include "heuristic.h"
+#include "MPU6050.h"
 
 
 using namespace std;
@@ -47,6 +48,7 @@ int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
  */
 
 int main() {
+    init_led(LED1_REG, LED1_MASK);
     init_led(LED2_REG, LED2_MASK);
     init_led(LED3_REG, LED3_MASK);
     init_led(LED4_REG, LED4_MASK);
@@ -57,18 +59,18 @@ int main() {
 
     //serial.printf("Testing device connections....\n");
     //serial.printf(accelgyro.testConnection() ? "MPU6050 connection successful\n" : "MPU6050 connection failure\n");
-    led_on(LED4_MASK);
+    //led_on(LED4_MASK);
 
     //data   = (int *)malloc(sizeof(int) * CLASSIFY_MEMORY_ALLOCATION);
     //int* i = data;
-    led_off(LED3_MASK);
+    //led_off(LED3_MASK);
     
     //first, fill up the buffer with values
     for(rear=0; rear < BUFFER_SIZE; rear += 3) {
         getAcceleration(&buffer[rear]);
     }
 
-    led_on(LED3_MASK);
+    //led_on(LED3_MASK);
     
     //initiate the heuristic before classifying
     init_heur();
@@ -92,6 +94,27 @@ int main() {
         
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
+
+        /*
+        switch (classify(rear, buffer))
+        {
+            case PEAK:
+                led_on(LED2_MASK);
+                led_off(LED3_MASK);
+                led_off(LED4_MASK);
+                break;
+            case TROU:
+                led_off(LED2_MASK);
+                led_on(LED3_MASK);
+                led_off(LED4_MASK);
+                break;
+            case NOT_EX:
+                led_off(LED2_MASK);
+                led_off(LED3_MASK);
+                //led_on(LED4_MASK);
+                break;
+        }
+        */
 
         if (heur_classify(classify(rear, buffer)))
         {

@@ -3,8 +3,8 @@
 
 #include "classify.h"
 
-#define HEUR_SIZE 10
-#define MAX_NOT_EX 0
+#define HEUR_SIZE 20
+#define MAX_NOT_EX 10
 
 int8_t heur_rear = -1;
 int8_t last_value = -1;
