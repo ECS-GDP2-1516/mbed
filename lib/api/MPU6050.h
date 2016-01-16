@@ -46,6 +46,7 @@ THE SOFTWARE.
 #define MPU6050_RA_ACCEL_CONFIG     0x1C
 #define MPU6050_RA_ACCEL_XOUT_H     0x3B
 #define MPU6050_RA_PWR_MGMT_1       0x6B
+#define MPU6050_RA_PWR_MGMT_2       0x6C
 
 
 static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
@@ -80,9 +81,10 @@ static inline void init()
 {
     i2c_init();
 
-    writeBits(MPU6050_RA_PWR_MGMT_1, 0xB8, 0x01);
+    writeBits(MPU6050_RA_PWR_MGMT_1, 0x90, 0x29);
     writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
     writeBits(MPU6050_RA_ACCEL_CONFIG, 0xE7, 0x00);
+    writeBits(MPU6050_RA_PWR_MGMT_2, ~0xC7, 0xC7);
 }
 
 static inline void getAcceleration(int16_t* buffer) {
