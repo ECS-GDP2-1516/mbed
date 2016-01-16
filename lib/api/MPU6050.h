@@ -88,7 +88,7 @@ static inline void init()
 }
 
 static inline void getAcceleration(int16_t* buffer) {
-    uint8_t buf[14];
+    uint8_t buf[6];
 
     readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, (uint8_t*)buf);
 
