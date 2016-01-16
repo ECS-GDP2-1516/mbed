@@ -50,6 +50,7 @@ int main() {
     init_led(LED2_REG, LED2_MASK);
     init_led(LED3_REG, LED3_MASK);
     init_led(LED4_REG, LED4_MASK);
+    init_led(P12_REG, P12_MASK);
 
     //LPC_USART->ACR = 0x7;
     init();
@@ -73,9 +74,22 @@ int main() {
     init_heur();
 
     rear = -1;
+
+    bool toggle = 0;
     
     //now we continue to read values and classify them
     while(1) {
+        if (toggle)
+        {
+            led_on(P12_MASK);
+            toggle = 0;
+        }
+        else
+        {
+            led_off(P12_MASK);
+            toggle = 1;
+        }
+        
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
 
