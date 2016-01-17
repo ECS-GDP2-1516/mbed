@@ -5,4 +5,4 @@
 *.o
 *.d
 *.swp
-mbed_dir
+.mbed_dir
