@@ -9,7 +9,7 @@ GCC_BIN =
 PROJECT = mbed_blinky
 OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
-LINKER_SCRIPT = ./LPC11U24.ld
+LINKER_SCRIPT = ./lib/LPC11U24.ld
 MBED_DIR = $(shell if test -a ./mbed_dir ; then cat mbed_dir ; fi)
 
 
