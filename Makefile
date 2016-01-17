@@ -23,12 +23,16 @@ OBJCOPY = $(GCC_BIN)arm-none-eabi-objcopy
 OBJDUMP = $(GCC_BIN)arm-none-eabi-objdump
 SIZE    = $(GCC_BIN)arm-none-eabi-size 
 
+ifdef map
+	MAP_CODE = -Wl,-Map=$(PROJECT).map,--cref
+endif
+
 
 CPU = -mcpu=cortex-m0 -mthumb
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
 CC_SYMBOLS = -Os
 
-LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs -Wl,-Map=$(PROJECT).map,--cref
+LD_FLAGS = $(CPU) -Wl,--gc-sections --specs=nano.specs $(MAP_CODE)
 LD_SYS_LIBS = -lc -lnosys
 
 CLEAN_MBED = rm -f $(MBED_DIR)/*.bin
