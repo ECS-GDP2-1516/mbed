@@ -17,11 +17,11 @@ static inline void init_heur() {
 }
 
 static inline void insert_value(uint8_t value) {
-    if(value != last_value) {
+    //if(value != last_value) {
         heur_rear=(heur_rear+1)%HEUR_SIZE;
         heur_buffer[heur_rear]=value;
         last_value = value;
-    }
+    //}
 }
 
 static inline bool heur_classify(uint8_t value) {
