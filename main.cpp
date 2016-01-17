@@ -76,7 +76,7 @@ int main() {
     //initiate the heuristic before classifying
     init_heur();
 
-    rear = 0;
+    rear = -1;
 
     bool toggle = 0;
     
