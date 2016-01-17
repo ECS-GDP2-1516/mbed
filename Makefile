@@ -2,7 +2,7 @@
 # see http://mbed.org/handbook/Exporting-to-GCC-ARM-Embedded
 
 # TEMP
-$(shell if ! test -e .mbed_dir ; then echo /media/mohit/MBED > .mbed_dir ; fi)
+#$(shell if ! test -e .mbed_dir ; then echo /media/mohit/MBED > .mbed_dir ; fi)
 ####
 
 GCC_BIN = 
