@@ -84,7 +84,7 @@ static inline void init()
     writeBits(MPU6050_RA_PWR_MGMT_1, 0x90, 0x29);
     writeBits(MPU6050_RA_GYRO_CONFIG, 0xE7, 0x00);
     writeBits(MPU6050_RA_ACCEL_CONFIG, 0xE7, 0x00);
-    writeBits(MPU6050_RA_PWR_MGMT_2, ~0xC7, 0xC7);
+    writeBits(MPU6050_RA_PWR_MGMT_2, (uint8_t)~0xC7, 0xC7);
 }
 
 static inline void getAcceleration(int16_t* buffer) {
