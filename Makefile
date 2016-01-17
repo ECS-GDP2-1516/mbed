@@ -36,7 +36,7 @@ CLEAN_MBED = rm -f $(MBED_DIR)/*.bin
 
 .PHONY: all clean lst size deploy
 
-all: $(PROJECT).bin $(PROJECT).hex size
+all: $(PROJECT).bin size
 
 
 clean:
