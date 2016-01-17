@@ -24,6 +24,7 @@ using namespace std;
 
 int8_t rear = -1;
 int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
+uint8_t temp = 0;
 
 /*
  * Watchdog control WDTOSCCTRL options
@@ -75,7 +76,7 @@ int main() {
     //initiate the heuristic before classifying
     init_heur();
 
-    rear = -1;
+    rear = 0;
 
     bool toggle = 0;
     
@@ -95,8 +96,8 @@ int main() {
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
 
-        /*
-        switch (classify(rear, buffer))
+        temp = classify(rear, buffer);
+        switch (temp)
         {
             case PEAK:
                 led_on(LED2_MASK);
@@ -111,18 +112,17 @@ int main() {
             case NOT_EX:
                 led_off(LED2_MASK);
                 led_off(LED3_MASK);
-                //led_on(LED4_MASK);
+                led_on(LED4_MASK);
                 break;
         }
-        */
 
-        if (heur_classify(classify(rear, buffer)))
+        if (heur_classify(temp))
         {
-            led_on(LED2_MASK);
+            led_on(LED1_MASK);
         }
         else
         {
-            led_off(LED2_MASK);
+            led_off(LED1_MASK);
         }
     }
 }
