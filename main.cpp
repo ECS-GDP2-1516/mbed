@@ -3,7 +3,7 @@
 #include "DigitalOut.h"
 #include "heuristic.h"
 #include "MPU6050.h"
-
+#include "SDFileSystem.h"
 
 using namespace std;
 
@@ -25,6 +25,8 @@ using namespace std;
 int8_t rear = -1;
 int16_t buffer[BUFFER_SIZE]; //the buffer is just used to read values into
 uint8_t temp = 0;
+
+SDFileSystem sd(p5, p6, p7, p8, "sd");
 
 /*
  * Watchdog control WDTOSCCTRL options
@@ -79,6 +81,10 @@ int main() {
     rear = -1;
 
     bool toggle = 0;
+
+    FILE *fp = fopen("/sd/test.txt", "w");
+    fprintf(fp, "TEST.txt");
+    fclose(fp);
     
     //now we continue to read values and classify them
     while(1) {
