@@ -95,25 +95,6 @@ int main() {
         rear = (rear + 3) % BUFFER_SIZE;
         getAcceleration(&buffer[rear - 2]);
 
-        switch (classify(rear, buffer))
-        {
-            case PEAK:
-                led_on(LED2_MASK);
-                led_off(LED3_MASK);
-                led_off(LED4_MASK);
-                break;
-            case TROU:
-                led_off(LED2_MASK);
-                led_on(LED3_MASK);
-                led_off(LED4_MASK);
-                break;
-            case NOT_EX:
-                led_off(LED2_MASK);
-                led_off(LED3_MASK);
-                led_on(LED4_MASK);
-                break;
-        }
-
         if (heur_classify(classify(rear, buffer)))
         {
             led_on(LED2_MASK);

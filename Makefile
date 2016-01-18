@@ -2,7 +2,7 @@
 # see http://mbed.org/handbook/Exporting-to-GCC-ARM-Embedded
 
 GCC_BIN = 
-PROJECT = mbed_blinky
+PROJECT = gdpd
 OBJECTS =  ./lib/system_LPC11Uxx.o ./main.o ./lib/startup_LPC11xx.o
 INCLUDE_PATHS = -I. -I./lib/api
 LINKER_SCRIPT = ./lib/LPC11U24.ld
