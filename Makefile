@@ -80,7 +80,7 @@ $(PROJECT).hex: $(PROJECT).elf
 	@$(OBJCOPY) -O ihex $< $@
 
 $(PROJECT).lst: $(PROJECT).elf
-	@$(OBJDUMP) -Sdh $< > $@
+	@$(OBJDUMP) -SDhx $< > $@
 
 lst: $(PROJECT).lst
 
