@@ -18,29 +18,15 @@
 
 #include "LPC11Uxx.h"
 
-
-typedef struct {                            /*!< (@ 0x40000000) I2C Structure          */
-  __IO uint32_t CONSET;                     /*!< (@ 0x40000000) I2C Control Set Register */
-  __I  uint32_t STAT;                       /*!< (@ 0x40000004) I2C Status Register */
-  __IO uint32_t DAT;                        /*!< (@ 0x40000008) I2C Data Register.  */
-  __IO uint32_t ADR0;                       /*!< (@ 0x4000000C) I2C Slave Address Register 0 */
-  __IO uint32_t SCLH;                       /*!< (@ 0x40000010) SCH Duty Cycle Register High Half Word */
-  __IO uint32_t SCLL;                       /*!< (@ 0x40000014) SCL Duty Cycle Register Low Half Word */
-  __IO uint32_t CONCLR;                     /*!< (@ 0x40000018) I2C Control Clear Register*/
-  __IO uint32_t MMCTRL;                     /*!< (@ 0x4000001C) Monitor mode control register*/
-  __IO uint32_t ADR1;                       /*!< (@ 0x40000020) I2C Slave Address Register 1*/
-  __IO uint32_t ADR2;                       /*!< (@ 0x40000024) I2C Slave Address Register 2*/
-  __IO uint32_t ADR3;                       /*!< (@ 0x40000028) I2C Slave Address Register 3*/
-  __I  uint32_t DATA_BUFFER;                /*!< (@ 0x4000002C) Data buffer register */
-union{
-  __IO uint32_t MASK[4];                    /*!< (@ 0x40000030) I2C Slave address mask register */
-  struct{
-  __IO uint32_t MASK0;
-  __IO uint32_t MASK1;
-  __IO uint32_t MASK2;
-  __IO uint32_t MASK3;
-  };
-  };
+typedef struct
+{                           /*!< (@ 0x40000000) I2C Structure          */
+    __IO uint32_t CONSET;       /*!< (@ 0x40000000) I2C Control Set Register */
+    __I  uint32_t STAT;         /*!< (@ 0x40000004) I2C Status Register */
+    __IO uint32_t DAT;          /*!< (@ 0x40000008) I2C Data Register.  */
+    __IO uint32_t ADR0;         /*!< (@ 0x4000000C) I2C Slave Address Register 0 */
+    __IO uint32_t SCLH;         /*!< (@ 0x40000010) SCH Duty Cycle Register High Half Word */
+    __IO uint32_t SCLL;         /*!< (@ 0x40000014) SCL Duty Cycle Register Low Half Word */
+    __IO uint32_t CONCLR;       /*!< (@ 0x40000018) I2C Control Clear Register*/
 } LPC_I2C_Type;
 
 enum {
@@ -48,16 +34,16 @@ enum {
   I2C_ERROR_BUS_BUSY = -2
 };
 
-#define WRITE_ADDR (211 & 0xFE)
-#define READ_ADDR  (211 | 0x01)
+#define WRITE_ADDR   (211 & 0xFE)
+#define READ_ADDR    (211 | 0x01)
 
-#define SDA_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5))
-#define SCL_REG ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4))
+#define SDA_REG      ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 5))
+#define SCL_REG      ((__IO uint32_t*)(LPC_IOCON0_BASE + 4 * 4))
 
-#define PULSE (4)
+#define PULSE        (4)
 
-#define LPC_I2C_BASE              (0x40000000)
-#define LPC_I2C                   ((LPC_I2C_Type            *) LPC_I2C_BASE)
+#define LPC_I2C_BASE (0x40000000)
+#define LPC_I2C      ((LPC_I2C_Type            *) LPC_I2C_BASE)
 
 static inline void i2c_conclr(int start, int stop, int interrupt, int acknowledge) {
     LPC_I2C->CONCLR = (start << 5)

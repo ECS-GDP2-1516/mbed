@@ -49,7 +49,8 @@ THE SOFTWARE.
 #define MPU6050_RA_PWR_MGMT_2       0x6C
 
 
-static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
+static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data)
+{
     int written = i2c_write((const char *)&regAddr, 1);
     if(1 != written)
         return -1;
@@ -59,14 +60,16 @@ static int8_t readBytes(uint8_t regAddr, uint8_t length, uint8_t *data) {
     return length != read;
 }
 
-static inline void writeBytes(uint8_t regAddr, uint8_t *data) {
+static inline void writeBytes(uint8_t regAddr, uint8_t *data)
+{
     uint8_t send[2];
     send[0] = regAddr;
     send[1] = data[0];
     i2c_write((const char *)send, 2);
 }
 
-static void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data) {
+static void writeBits(uint8_t regAddr, uint8_t mask, uint8_t data)
+{
     uint8_t b;
     if(readBytes(regAddr, 1, &b))
         return;
@@ -87,7 +90,8 @@ static inline void init()
     writeBits(MPU6050_RA_PWR_MGMT_2, (uint8_t)~0xC7, 0x87);
 }
 
-static inline void getAcceleration(int16_t* buffer) {
+static inline void getAcceleration(int16_t* buffer)
+{
     uint8_t buf[6];
 
     readBytes(MPU6050_RA_ACCEL_XOUT_H, 6, (uint8_t*)buf);
