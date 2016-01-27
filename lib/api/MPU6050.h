@@ -38,6 +38,7 @@ THE SOFTWARE.
 #define _MPU6050_H_
 
 #include "i2c_api.h"
+#include "asr.h"
 
 /**
  * Addresses in the I2C
@@ -100,9 +101,9 @@ static inline void getAcceleration(int16_t* buffer)
     buffer[1] = (((uint16_t)buf[2]) << 8) | (buf[3]);
     buffer[2] = (((uint16_t)buf[4]) << 8) | (buf[5]);
 
-    buffer[0] >>= 2;
-    buffer[1] >>= 2;
-    buffer[2] >>= 2;
+    buffer[0] = asr(buffer[0], 2);
+    buffer[1] = asr(buffer[1], 2);
+    buffer[2] = asr(buffer[2], 2);
 }
 
 #endif /* _MPU6050_H_ */

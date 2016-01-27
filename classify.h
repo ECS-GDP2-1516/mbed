@@ -4,6 +4,7 @@
 #define BUFFER_SIZE 60
 
 #include <stdint.h>
+#include "asr.h"
 
 /**
  * Approximates sigmoid with the given value
@@ -82,8 +83,8 @@ static inline ExType classify(int8_t rear, int16_t buffer[])
     do
     {
         j      = (j + 1) % BUFFER_SIZE;
-        nodeA += (*offset++ * buffer[j]) >> 12;
-        nodeB += (*offset++ * buffer[j]) >> 12;
+        nodeA += asr(*offset++ * buffer[j], 12);
+        nodeB += asr(*offset++ * buffer[j], 12);
     } while (j != rear);
 
     sigmoid(&nodeA);
@@ -94,8 +95,8 @@ static inline ExType classify(int8_t rear, int16_t buffer[])
     for (int32_t* i = v; i < v + 3; i++)
     {
         *i  = *offset++;
-        *i += (*offset++ * nodeA) >> 12;
-        *i += (*offset++ * nodeB) >> 12;
+        *i += asr(*offset++ * nodeA, 12);
+        *i += asr(*offset++ * nodeB, 12);
         sigmoid(i);
     }
 
@@ -131,6 +132,8 @@ static void sigmoid(int32_t* var)
     }
     else
     {
+        //*var *= 410;
+        //*var  = asr(*var, 12);
         *var = ((410 * *var) >> 12) + 2048;
     }
 }
