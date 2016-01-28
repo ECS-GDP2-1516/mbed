@@ -2,6 +2,7 @@
 *.elf
 *.hex
 *.map
+*.lst
 *.o
 *.d
 *.swp
